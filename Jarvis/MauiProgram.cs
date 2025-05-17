@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Jarvis
 {
@@ -20,6 +21,10 @@ namespace Jarvis
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
+            builder.Services.AddFluentUIComponents(options =>
+            {
+                options.ValidateClassNames = false;
+            });
 
             return builder.Build();
         }
