@@ -1,0 +1,33 @@
+﻿@using Jarvis.Exceptions
+@using Jarvis.Models.Auth
+@using Jarvis.Components.Layout
+@using Jarvis.Services
+
+@page "/login"
+@layout LoginLayout
+@inject IAuthenticationService _authService
+@inject NavigationManager _navManager
+
+<h5>Criar conta</h5>
+
+<FluentEditForm Model=_model OnValidSubmit=HandleSubmitAsync>
+    <FluentTextField @bind-Value=_model.Email></FluentTextField>
+    <FluentTextField @bind-Value=_model.Password></FluentTextField>
+    <FluentButton Type="ButtonType.Submit"></FluentButton>
+</FluentEditForm>
+
+@code {
+    private LoginModel _model = new();
+
+    private async Task HandleSubmitAsync()
+    {
+        try
+        {
+            await _authService.AuthenticateAsync(_model.Email, _model.Password);
+            _navManager.NavigateTo("/");
+        }
+        catch (AuthenticationException)
+        {            
+        }
+    }
+}
