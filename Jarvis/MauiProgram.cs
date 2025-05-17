@@ -1,4 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Jarvis.Configurations;
+using Jarvis.Providers;
+using Jarvis.Services;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.FluentUI.AspNetCore.Components;
 
 namespace Jarvis
 {
@@ -14,12 +20,22 @@ namespace Jarvis
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+            builder.AddDependencyInjectionConfigs();
+
+            builder.Services.AddAuthorizationCore();
+
             builder.Services.AddMauiBlazorWebView();
 
+            builder.Services.AddFluentUIComponents(options =>
+            {
+                options.ValidateClassNames = false;
+            });
+
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
+            
 
             return builder.Build();
         }
