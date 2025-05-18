@@ -15,7 +15,7 @@ namespace Jarvis.Configurations
     {
         public static MauiAppBuilder AddDependencyInjectionConfigs(this MauiAppBuilder builder)
         {
-            builder.Services.AddScoped<IAuthenticationClient, FakeAuthenticationClient>();
+            builder.Services.AddScoped<IUserClient, FakeUserClient>();
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
             builder.Services.TryAddScoped<AuthenticationStateProvider, ExternalAuthStateProvider>();
 

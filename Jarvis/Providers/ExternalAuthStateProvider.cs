@@ -11,20 +11,20 @@ namespace Jarvis.Providers
 {
     public class ExternalAuthStateProvider : AuthenticationStateProvider
     {
-        private AuthenticationState currentUser;
+        private AuthenticationState _currentUser;
 
-        public ExternalAuthStateProvider(AuthenticationService service)
+        public ExternalAuthStateProvider(IAuthenticationService service)
         {
-            currentUser = new AuthenticationState(service.CurrentUser);
+            _currentUser = new AuthenticationState(service.CurrentUser);
 
             service.UserChanged += (newUser) =>
             {
-                currentUser = new AuthenticationState(newUser);
-                NotifyAuthenticationStateChanged(Task.FromResult(currentUser));
+                _currentUser = new AuthenticationState(newUser);
+                NotifyAuthenticationStateChanged(Task.FromResult(_currentUser));
             };
         }
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
-            Task.FromResult(currentUser);
+            Task.FromResult(_currentUser);
     }
 }

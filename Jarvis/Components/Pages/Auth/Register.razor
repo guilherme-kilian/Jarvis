@@ -8,29 +8,30 @@
 @inject IAuthenticationService _authService
 @inject NavigationManager _navManager
 
-<h5>Acessar conta</h5>
+<h5>Criar conta</h5>
 
 <FluentEditForm Model=_model OnValidSubmit=HandleSubmitAsync>
     <div class="d-flex flex-column">
+        <FluentTextField @bind-Value=_model.Name></FluentTextField>
         <FluentTextField @bind-Value=_model.Email></FluentTextField>
         <FluentTextField @bind-Value=_model.Password></FluentTextField>
-        <FluentButton Type="ButtonType.Submit">Entrar</FluentButton>
+        <FluentButton Type="ButtonType.Submit">Cadastrar</FluentButton>
     </div>
 </FluentEditForm>
 
 <div class="d-flex justify-content-center">
-    Não tem uma conta? <a href="javascript:;" @onclick=ChangePage>Cadastrar</a>
+    Já tem uma conta? <a href="javascript:;" @onclick=ChangePage>Entrar</a>
 </div>
 
 @code {
     [Parameter, EditorRequired]
     public EventCallback ChangePage { get; set; }
 
-    private LoginFrontModel _model = new();
+    private RegisterUserFrontModel _model = new();
 
     private async Task HandleSubmitAsync()
     {
-        if (string.IsNullOrEmpty(_model.Email) || string.IsNullOrEmpty(_model.Password))
+        if (string.IsNullOrEmpty(_model.Email) || string.IsNullOrEmpty(_model.Password) || string.IsNullOrEmpty(_model.Name))
             return;
 
         try
@@ -39,7 +40,7 @@
             _navManager.NavigateTo("/");
         }
         catch (AuthenticationException)
-        {            
+        {
         }
     }
 }

@@ -1,17 +1,24 @@
 ﻿using Jarvis.Clients;
 using Jarvis.Exceptions;
+using Jarvis.Models.Auth;
 using System.Security.Claims;
 
 namespace Jarvis.Services
 {
     public interface IAuthenticationService
     {
+        event Action<ClaimsPrincipal>? UserChanged;
+
+        ClaimsPrincipal CurrentUser { get; set; }
+
+        Task AuthenticateAsync(RegisterUserFrontModel create);
+
         Task AuthenticateAsync(string username, string password);
     }
 
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IAuthenticationClient _client;
+        private readonly IUserClient _client;
 
         public event Action<ClaimsPrincipal>? UserChanged;
 
@@ -31,7 +38,7 @@ namespace Jarvis.Services
             }
         }
 
-        public AuthenticationService(IAuthenticationClient client)
+        public AuthenticationService(IUserClient client)
         {
             _client = client;
         }
@@ -40,18 +47,29 @@ namespace Jarvis.Services
         {
             if(await _client.CheckPasswordAsync(username, password))
             {
-                var identitiy = new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role, "User")
-                });
-
-                _currentUser = new ClaimsPrincipal(identitiy);
+                _client.Get
+                AuthenticateAsync(username);
             }
             else
             {
                 throw new AuthenticationException("Usuário ou senha inválido");
             }
+        }
+
+        public Task AuthenticateAsync(RegisterUserFrontModel create)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AuthenticateAsync(string username)
+        {
+            var identitiy = new ClaimsIdentity(new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Role, "User")
+                });
+
+            _currentUser = new ClaimsPrincipal(identitiy);
         }
     }
 }

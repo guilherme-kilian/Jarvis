@@ -2,7 +2,7 @@
 
 namespace Jarvis.Models.Auth
 {
-    public class LoginModel
+    public class LoginFrontModel
     {
         [Required]
         [EmailAddress]

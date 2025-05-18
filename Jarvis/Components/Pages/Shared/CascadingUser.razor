@@ -24,7 +24,7 @@
 
         var auth = await AuthenticationStateTask;
 
-        if (!auth.User.Identity?.IsAuthenticated ?? false)
+        if (auth.User?.Identity is null || !auth.User.Identity.IsAuthenticated)
         {
             _navManager.NavigateTo("/login");
             return;

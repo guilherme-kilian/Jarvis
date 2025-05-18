@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Jarvis.Models.User
 {
-    public class UserModel
+    public class CreateUserModel
     {
-        public required string Name { get; set; }
         public required string Email { get; set; }
+        public required string Name { get; set; }
         public required string Password { get; set; }
     }
 }
