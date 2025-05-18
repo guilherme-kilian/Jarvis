@@ -3,7 +3,6 @@
 @using Jarvis.Components.Layout
 @using Jarvis.Services
 
-@page "/login"
 @layout LoginLayout
 @inject IAuthenticationService _authService
 @inject NavigationManager _navManager
@@ -12,8 +11,8 @@
 
 <FluentEditForm Model=_model OnValidSubmit=HandleSubmitAsync>
     <div class="d-flex flex-column">
-        <FluentTextField @bind-Value=_model.Email></FluentTextField>
-        <FluentTextField @bind-Value=_model.Password></FluentTextField>
+        <FluentTextField Label="E-mail" @bind-Value=_model.Email></FluentTextField>
+        <FluentTextField Label="Senha" @bind-Value=_model.Password></FluentTextField>
         <FluentButton Type="ButtonType.Submit">Entrar</FluentButton>
     </div>
 </FluentEditForm>

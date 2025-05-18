@@ -1,4 +1,6 @@
-﻿@using Jarvis.Models.User
+﻿@using Jarvis.Const
+@using Jarvis.Extensions
+@using Jarvis.Models.User
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 
@@ -32,7 +34,11 @@
 
         User = new UserModel
         {
-            Email = auth.User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty,
+            Email = auth.User.GetEmail(),
+            Name = auth.User.GetName(),
+            PictureUrl = auth.User.GetProfilePicture(),
+            DailyMeta = auth.User.GetDailyMeta(),
+            Password = string.Empty,
         };
     }
 }

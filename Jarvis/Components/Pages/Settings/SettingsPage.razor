@@ -1,0 +1,68 @@
+﻿@page "/settings"
+@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.User
+
+@inject IUserClient _userClient
+@inject NavigationManager _navManager
+
+<FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowLeft())" />
+
+<span>Configurações</span>
+
+@if (_update is null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <div class="d-flex gap-2">
+        <FluentButton>Geral</FluentButton>
+        <FluentButton>Integrações</FluentButton>
+    </div>
+    <div class="d-flex justify-content-center">
+        <img src="@_update.PictureUrl" />
+        <a href="javascript:;" @onclick=EditAsync></a>
+    </div>
+
+    <FluentEditForm>
+        <FluentTextField @bind-Value=_update.Name Label="Nome" />
+        <FluentLabel>Tags</FluentLabel>
+        <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
+        <FluentNumberField @bind-Value=_update.DailyMeta />
+        <FluentButton Type="ButtonType.Submit">Salvar</FluentButton>
+    </FluentEditForm>
+}
+
+
+@code {
+    [CascadingParameter, EditorRequired]
+    private CascadingUser? CascadingUser { get; set; }
+
+    private UpdateUserModel? _update;
+
+    protected override void OnInitialized()
+    {
+        if (CascadingUser?.User is null)
+            return;
+
+        var user = CascadingUser.User;
+
+        _update = new()
+            {
+                DailyMeta = user.DailyMeta,
+                Name = user.Name,
+                PictureUrl = user.PictureUrl,
+            };
+    }
+
+    private void RedirectToTags()
+    {
+        _navManager.NavigateTo("/tags");
+    }
+
+    private Task EditAsync()
+    {
+        return Task.CompletedTask;
+    }
+}

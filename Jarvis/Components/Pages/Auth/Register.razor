@@ -3,7 +3,6 @@
 @using Jarvis.Components.Layout
 @using Jarvis.Services
 
-@page "/login"
 @layout LoginLayout
 @inject IAuthenticationService _authService
 @inject NavigationManager _navManager
@@ -12,9 +11,9 @@
 
 <FluentEditForm Model=_model OnValidSubmit=HandleSubmitAsync>
     <div class="d-flex flex-column">
-        <FluentTextField @bind-Value=_model.Name></FluentTextField>
-        <FluentTextField @bind-Value=_model.Email></FluentTextField>
-        <FluentTextField @bind-Value=_model.Password></FluentTextField>
+        <FluentTextField Label="Nome Completo" @bind-Value=_model.Name></FluentTextField>
+        <FluentTextField Label="E-mail" @bind-Value=_model.Email></FluentTextField>
+        <FluentTextField Label="Senha" @bind-Value=_model.Password></FluentTextField>
         <FluentButton Type="ButtonType.Submit">Cadastrar</FluentButton>
     </div>
 </FluentEditForm>
@@ -30,13 +29,10 @@
     private RegisterUserFrontModel _model = new();
 
     private async Task HandleSubmitAsync()
-    {
-        if (string.IsNullOrEmpty(_model.Email) || string.IsNullOrEmpty(_model.Password) || string.IsNullOrEmpty(_model.Name))
-            return;
-
+    {        
         try
         {
-            await _authService.AuthenticateAsync(_model.Email, _model.Password);
+            await _authService.AuthenticateAsync(_model);
             _navManager.NavigateTo("/");
         }
         catch (AuthenticationException)

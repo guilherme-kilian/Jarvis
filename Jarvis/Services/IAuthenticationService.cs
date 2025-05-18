@@ -1,6 +1,8 @@
 ﻿using Jarvis.Clients;
+using Jarvis.Const;
 using Jarvis.Exceptions;
 using Jarvis.Models.Auth;
+using Jarvis.Models.User;
 using System.Security.Claims;
 
 namespace Jarvis.Services
@@ -13,7 +15,7 @@ namespace Jarvis.Services
 
         Task AuthenticateAsync(RegisterUserFrontModel create);
 
-        Task AuthenticateAsync(string username, string password);
+        Task AuthenticateAsync(string email, string password);
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -43,12 +45,16 @@ namespace Jarvis.Services
             _client = client;
         }
 
-        public async Task AuthenticateAsync(string username, string password)
+        public async Task AuthenticateAsync(string email, string password)
         {
-            if(await _client.CheckPasswordAsync(username, password))
+            if(await _client.CheckPasswordAsync(email, password))
             {
-                _client.Get
-                AuthenticateAsync(username);
+                var user = await _client.GetAsync(email);
+
+                if (user is null) 
+                    return;
+
+                Authenticate(user);
             }
             else
             {
@@ -56,18 +62,33 @@ namespace Jarvis.Services
             }
         }
 
-        public Task AuthenticateAsync(RegisterUserFrontModel create)
+        public async Task AuthenticateAsync(RegisterUserFrontModel create)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(create.Email) || string.IsNullOrEmpty(create.Password) || string.IsNullOrEmpty(create.Name))
+                return;
+
+            var model = new CreateUserModel
+            {
+                Email = create.Email,
+                Name = create.Name,
+                Password = create.Password,
+            };
+
+            var user = await _client.CreateUserAsync(model);
+
+            Authenticate(user);
         }
 
-        private void AuthenticateAsync(string username)
+        private void Authenticate(UserModel user)
         {
-            var identitiy = new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role, "User")
-                });
+            var identitiy = new ClaimsIdentity(
+                [
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new(ClaimTypes.Email, user.Email),
+                    new(ClaimTypesCustom.ProfilePicture, user.PictureUrl ?? string.Empty),
+                    new(ClaimTypesCustom.DailyMeta, user.DailyMeta.ToString()),
+                    new Claim(ClaimTypes.Role, "User"),
+                ]);
 
             _currentUser = new ClaimsPrincipal(identitiy);
         }
