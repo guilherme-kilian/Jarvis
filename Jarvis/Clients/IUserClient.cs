@@ -12,7 +12,7 @@ namespace Jarvis.Clients
 
     public class FakeUserClient : IUserClient
     {
-        private List<UserModel> Users = [];
+        private static List<UserModel> Users = [];
 
         public Task<bool> CheckPasswordAsync(string email, string password)
         {

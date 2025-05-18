@@ -1,4 +1,5 @@
-﻿@using Jarvis.Exceptions
+﻿@using Jarvis.Components.Pages.Shared
+@using Jarvis.Exceptions
 @using Jarvis.Models.Auth
 @using Jarvis.Components.Layout
 @using Jarvis.Services
@@ -22,6 +23,9 @@
 </div>
 
 @code {
+    [CascadingParameter, EditorRequired]
+    private CascadingUser CascadingUser { get; set; }
+
     [Parameter, EditorRequired]
     public EventCallback ChangePage { get; set; }
 
@@ -34,7 +38,8 @@
 
         try
         {
-            await _authService.AuthenticateAsync(_model.Email, _model.Password);
+            var user = await _authService.AuthenticateAsync(_model.Email, _model.Password);
+            CascadingUser.User = user;
             _navManager.NavigateTo("/");
         }
         catch (AuthenticationException)

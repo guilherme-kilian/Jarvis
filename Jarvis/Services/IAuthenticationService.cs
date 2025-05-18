@@ -13,9 +13,9 @@ namespace Jarvis.Services
 
         ClaimsPrincipal CurrentUser { get; set; }
 
-        Task AuthenticateAsync(RegisterUserFrontModel create);
+        Task<UserModel> AuthenticateAsync(RegisterUserFrontModel create);
 
-        Task AuthenticateAsync(string email, string password);
+        Task<UserModel> AuthenticateAsync(string email, string password);
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -45,16 +45,16 @@ namespace Jarvis.Services
             _client = client;
         }
 
-        public async Task AuthenticateAsync(string email, string password)
+        public async Task<UserModel> AuthenticateAsync(string email, string password)
         {
             if(await _client.CheckPasswordAsync(email, password))
             {
-                var user = await _client.GetAsync(email);
-
-                if (user is null) 
-                    return;
+                var user = await _client.GetAsync(email) 
+                    ?? throw new InvalidOperationException("Falha ao realizar o login. Usuário não encontrado");
 
                 Authenticate(user);
+
+                return user;
             }
             else
             {
@@ -62,10 +62,10 @@ namespace Jarvis.Services
             }
         }
 
-        public async Task AuthenticateAsync(RegisterUserFrontModel create)
+        public async Task<UserModel> AuthenticateAsync(RegisterUserFrontModel create)
         {
             if (string.IsNullOrEmpty(create.Email) || string.IsNullOrEmpty(create.Password) || string.IsNullOrEmpty(create.Name))
-                return;
+                throw new InvalidOperationException("Email, senha e nome são obrigatórios");
 
             var model = new CreateUserModel
             {
@@ -77,18 +77,23 @@ namespace Jarvis.Services
             var user = await _client.CreateUserAsync(model);
 
             Authenticate(user);
+
+            return user;
         }
 
         private void Authenticate(UserModel user)
         {
-            var identitiy = new ClaimsIdentity(
-                [
+            List<Claim> claims = [
                     new Claim(ClaimTypes.Name, user.Name),
                     new(ClaimTypes.Email, user.Email),
                     new(ClaimTypesCustom.ProfilePicture, user.PictureUrl ?? string.Empty),
                     new(ClaimTypesCustom.DailyMeta, user.DailyMeta.ToString()),
                     new Claim(ClaimTypes.Role, "User"),
-                ]);
+                ];
+
+            var identitiy = new ClaimsIdentity("external");
+
+            identitiy.AddClaims(claims);
 
             _currentUser = new ClaimsPrincipal(identitiy);
         }
