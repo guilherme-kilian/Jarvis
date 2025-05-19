@@ -25,7 +25,7 @@
 
 @code {
     [CascadingParameter, EditorRequired]
-    private CascadingUser CascadingUser { get; set; }
+    private CascadingUser? CascadingUser { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback ChangePage { get; set; }
@@ -33,7 +33,10 @@
     private RegisterUserFrontModel _model = new();
 
     private async Task HandleSubmitAsync()
-    {        
+    {
+        if (CascadingUser is null)
+            return;
+
         try
         {
             var user = await _authService.AuthenticateAsync(_model);
