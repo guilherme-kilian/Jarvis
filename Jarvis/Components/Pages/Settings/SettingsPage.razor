@@ -25,7 +25,7 @@ else
         <a href="javascript:;" @onclick=EditAsync></a>
     </div>
 
-    <FluentEditForm>
+    <FluentEditForm Model=_update>
         <FluentTextField @bind-Value=_update.Name Label="Nome" />
         <FluentLabel>Tags</FluentLabel>
         <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
