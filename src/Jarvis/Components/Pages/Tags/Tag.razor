@@ -1,0 +1,12 @@
+﻿@using Jarvis.Models.Tags
+
+@{
+    var backgroundColor = $"background-color: {TagModel.Color};";
+}
+
+<span style="@backgroundColor" class="text-white">@TagModel.Title</span>
+
+@code {
+    [Parameter, EditorRequired]
+    public TagModel TagModel { get; set; }
+}

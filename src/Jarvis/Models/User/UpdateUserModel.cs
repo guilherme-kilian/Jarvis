@@ -1,0 +1,9 @@
+﻿namespace Jarvis.Models.User
+{
+    public class UpdateUserModel
+    {
+        public int DailyMeta { get; set; }
+        public string? Name { get; set; }
+        public string? PictureUrl { get; set; }
+    }
+}

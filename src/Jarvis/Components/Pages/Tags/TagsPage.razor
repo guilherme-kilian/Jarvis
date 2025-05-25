@@ -1,0 +1,24 @@
+﻿@page "/tags"
+
+@using Jarvis.Clients
+@using Jarvis.Models.Tags
+
+@inject ITagsClient _tagsClient
+
+<h4>Tags</h4>
+
+@foreach (var tag in _tags)
+{
+    
+}
+
+
+@code {
+    private List<TagModel> _tags = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tags = await _tagsClient.GetAsync();
+
+    }
+}
