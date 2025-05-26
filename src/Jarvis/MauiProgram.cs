@@ -19,9 +19,6 @@ namespace Jarvis
                 .AddDependencyInjectionConfigs()
                 .AddLogConfigs();
 
-            
-
-
             builder.Services.AddAuthorizationCore();
 
             builder.Services.AddMauiBlazorWebView();
