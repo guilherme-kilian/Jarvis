@@ -1,7 +1,6 @@
 ﻿using Jarvis.Configurations;
 using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
-
 namespace Jarvis
 {
     public static class MauiProgram
@@ -16,7 +15,12 @@ namespace Jarvis
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-            builder.AddDependencyInjectionConfigs();
+            builder
+                .AddDependencyInjectionConfigs()
+                .AddLogConfigs();
+
+            
+
 
             builder.Services.AddAuthorizationCore();
 
