@@ -1,5 +1,22 @@
 ﻿
 
+<div class="d-flex gap-2 flex-nowrap" style="overflow-x:auto;">
+    @for (int i = 0; i < _days; i++)
+    {
+        var date = DateTime.Now.AddDays(i);
+
+        <div class="card" style="cursor:pointer; min-width:75px;" @onclick=@(() => OnDateSelected(date))>
+            <div class="card-body">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <span>@date.Day</span>
+                    <span>
+                        @GetDayOfWeek(date)
+                    </span>                    
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 
 @code {
@@ -10,9 +27,26 @@
     [Parameter, EditorRequired]
     public EventCallback<DateTime> DateChanged { get; set; }
 
+    private int _days = 10;
+
     private Task OnDateSelected(DateTime date)
     {
         Date = date;
         return DateChanged.InvokeAsync(date);
+    }
+
+    private string GetDayOfWeek(DateTime date)
+    {
+        return Date.DayOfWeek switch
+        {
+            DayOfWeek.Monday => "Seg",
+            DayOfWeek.Tuesday => "Ter",
+            DayOfWeek.Wednesday => "Qua",
+            DayOfWeek.Thursday => "Quin",
+            DayOfWeek.Friday => "Sex",
+            DayOfWeek.Saturday => "Sáb",
+            DayOfWeek.Sunday => "Dom",
+            _ => string.Empty,
+        };
     }
 }

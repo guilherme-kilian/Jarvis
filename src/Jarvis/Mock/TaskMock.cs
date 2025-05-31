@@ -18,7 +18,7 @@ namespace Jarvis.Mock
                     new() { Title = "Escrever resultados", Id = 3, IsDone = true },
                     new() { Title = "Escrever referencial", Id = 4, IsDone = false },
                 ],
-                Labels =
+                Tags =
                 [ TagsMock.UnisinosLabel ],
                 CreatedAt = DateTime.Now,
             },
@@ -27,7 +27,7 @@ namespace Jarvis.Mock
                 Title = "Corrigir TCC",
                 Id = 2,
                 IsDone = false,
-                Labels = [ TagsMock.UnisinosLabel ],
+                Tags = [ TagsMock.UnisinosLabel ],
                 CreatedAt = DateTime.Now,
             },
             new()
@@ -35,7 +35,7 @@ namespace Jarvis.Mock
                 Title = "Limpar Quarto",
                 Id = 2,
                 IsDone = true,
-                Labels = [TagsMock.UrgentLabel, TagsMock.HomeLabel],
+                Tags = [TagsMock.UrgentLabel, TagsMock.HomeLabel],
                 CreatedAt = DateTime.Now,
             },
             ];

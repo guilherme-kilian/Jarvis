@@ -1,0 +1,35 @@
+﻿@using Jarvis.Models.Tasks
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex">
+            <input type="checkbox" @bind=@_isDone />
+            <h5 class="ms-2">@Task.Title</h5>
+        </div>
+
+        @if(Task.Substasks.Count > 0)
+        {            
+            <div>
+                @(Task.Substasks.Count(s => s.IsDone))/@(Task.Substasks.Count) concluídas
+            </div>
+        }
+
+        <div class="d-flex gap-1">
+            @foreach (var tag in Task.Tags)
+            {
+                <span class="badge" style="background-color:@(tag.Color)">@tag.Title</span>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public TasksModel Task { get; set; } = null!;
+
+    private bool _isDone;
+
+    protected override void OnInitialized()
+    {
+        _isDone = Task.IsDone;
+    }
+}

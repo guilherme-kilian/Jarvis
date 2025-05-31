@@ -24,7 +24,7 @@ namespace Jarvis.Models.Tasks
 
         public Priority Priority { get; set; }
 
-        public List<TagModel> Labels { get; set; } = [];
+        public List<TagModel> Tags { get; set; } = [];
         public List<SubstaskModel> Substasks { get; set; } = [];
     }
 }

@@ -7,7 +7,7 @@
     <div class="card-body">
         <div class="d-flex justify-content-between">
             <div class="d-flex flex-column">
-                <span>Ganhe o dia</span>
+                <span>Ganhe o dia 🎯</span>
                 <small>@(_completedToday)/@(_totalToday) concluídas</small>
             </div>
 
@@ -24,9 +24,8 @@
 </div>
 
 @code {
-    
     [Parameter, EditorRequired]
-    public List<TasksModel> Tasks { get; set; } = []
+    public List<TasksModel> Tasks { get; set; } = [];
 
     private int _totalToday;
     private int _completedToday;

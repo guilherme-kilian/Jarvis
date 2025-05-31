@@ -1,13 +1,34 @@
 ﻿@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
 @using Jarvis.Models.Tasks
 @using Jarvis.Models.User
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 @inject ITaskClient _taskClient
+@inject NavigationManager _navManager
 
 <MetaProgress Tasks="@_tasks" />
 
 <DayPicker @bind-Date=_date />
+
+<span>Agenda ⏰</span>
+
+<hr />
+
+<span>Hoje 🗓️</span>
+
+<div class="d-flex flex-column gap-2">
+    @foreach (var task in _tasks)
+    {
+        <TaskCard Task=task />
+    }
+</div>
+
+<div style="position:fixed; bottom:25px; right: 25px;">
+    <FluentButton OnClick=@(RedirectToCreateTask) Class="rounded-circle" Color=@Color.Success.ToAttributeValue()>
+        <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Autosum())" />
+    </FluentButton>
+</div>
 
 @code {
     [Parameter, EditorRequired]
@@ -23,5 +44,10 @@
             return;
 
         _tasks = await _taskClient.GetAsync(_date);
+    }
+
+    private void RedirectToCreateTask()
+    {
+        _navManager.NavigateTo("/tasks/create");
     }
 }
