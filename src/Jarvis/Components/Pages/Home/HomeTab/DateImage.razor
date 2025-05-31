@@ -1,0 +1,30 @@
+﻿
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            @Date.Day
+
+            @GetDayOfWeek()
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public DateTime Date { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<DateTime> DateClicked { get; set; }
+
+    private string GetDayOfWeek()
+    {
+        return Date.DayOfWeek switch
+        {
+            DayOfWeek.Monday => "Seg",
+            DayOfWeek.Tuesday=> "Seg",
+            DayOfWeek.Wednesday => "Seg",
+            DayOfWeek.Thursday => "Seg",
+            DayOfWeek.Friday => "Seg",
+        }
+    }
+}

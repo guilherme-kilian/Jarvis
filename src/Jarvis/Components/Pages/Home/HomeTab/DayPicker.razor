@@ -1,0 +1,18 @@
+﻿
+
+
+
+@code {
+
+    [Parameter, EditorRequired]
+    public DateTime Date { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<DateTime> DateChanged { get; set; }
+
+    private Task OnDateSelected(DateTime date)
+    {
+        Date = date;
+        return DateChanged.InvokeAsync(date);
+    }
+}
