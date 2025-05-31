@@ -4,7 +4,7 @@ namespace Jarvis.Mock
 {
     public static class TaskMock
     {
-        public static List<TasksModel> Tasks =
+        public static List<TaskModel> Tasks =
             [
             new()
             {
@@ -20,7 +20,7 @@ namespace Jarvis.Mock
                 ],
                 Tags =
                 [ TagsMock.UnisinosLabel ],
-                CreatedAt = DateTime.Now,
+                Date = DateTime.Now,
             },
             new()
             {
@@ -28,7 +28,7 @@ namespace Jarvis.Mock
                 Id = 2,
                 IsDone = false,
                 Tags = [ TagsMock.UnisinosLabel ],
-                CreatedAt = DateTime.Now,
+                Date = DateTime.Now,
             },
             new()
             {
@@ -36,7 +36,7 @@ namespace Jarvis.Mock
                 Id = 2,
                 IsDone = true,
                 Tags = [TagsMock.UrgentLabel, TagsMock.HomeLabel],
-                CreatedAt = DateTime.Now,
+                Date = DateTime.Now,
             },
             ];
     }

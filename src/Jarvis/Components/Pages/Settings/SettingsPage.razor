@@ -29,7 +29,7 @@ else
         <FluentTextField @bind-Value=_update.Name Label="Nome" />
         <FluentLabel>Tags</FluentLabel>
         <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
-        <FluentNumberField Label="Meta diária" @bind-Value=_update.DailyMeta />
+        <FluentNumberField Label="Meta diária" @bind-Value=_update.WinTheDayGoal />
         <div>
             <FluentButton Type="ButtonType.Submit">Salvar</FluentButton>
         </div>
@@ -52,7 +52,7 @@ else
 
         _update = new()
             {
-                DailyMeta = user.DailyGoalSize,
+                WinTheDayGoal = user.WinTheDayGoal,
                 Name = user.Name,
                 PictureUrl = user.ProfilePicture,
             };

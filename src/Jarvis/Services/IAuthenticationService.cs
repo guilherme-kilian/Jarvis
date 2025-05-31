@@ -49,19 +49,12 @@ namespace Jarvis.Services
 
         public async Task<UserModel> AuthenticateAsync(string email, string password)
         {
-            if(await _client.CheckPasswordAsync(email, password))
-            {
-                var user = await _client.GetAsync(email) 
-                    ?? throw new InvalidOperationException("Falha ao realizar o login. Usuário não encontrado");
+            var user = await _client.CheckPasswordAsync(email, password) 
+                ?? throw new AuthenticationException("Usuário ou senha inválido");
 
-                Authenticate(user);
+            Authenticate(user);
 
-                return user;
-            }
-            else
-            {
-                throw new AuthenticationException("Usuário ou senha inválido");
-            }
+            return user;            
         }
 
         public async Task<UserModel> AuthenticateAsync(RegisterUserFrontModel create)
@@ -89,7 +82,7 @@ namespace Jarvis.Services
                     new Claim(ClaimTypes.Name, user.Name),
                     new(ClaimTypes.Email, user.Email),
                     new(ClaimTypesCustom.ProfilePicture, user.ProfilePicture ?? string.Empty),
-                    new(ClaimTypesCustom.DailyMeta, user.DailyGoalSize.ToString()),
+                    new(ClaimTypesCustom.DailyMeta, user.WinTheDayGoal.ToString()),
                     new Claim(ClaimTypes.Role, "User"),
                 ];
 

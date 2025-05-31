@@ -39,6 +39,7 @@
 
         if (user != null)
         {
+            ArgumentNullException.ThrowIfNullOrEmpty(user.Password);
             await AutenticateAsync(user.Email, user.Password);
         }
     }

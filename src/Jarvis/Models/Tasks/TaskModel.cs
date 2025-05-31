@@ -4,7 +4,7 @@ using Jarvis.Models.Tags;
 
 namespace Jarvis.Models.Tasks
 {
-    public class TasksModel
+    public class TaskModel
     {
         public int Id { get; set; }
 
@@ -16,7 +16,7 @@ namespace Jarvis.Models.Tasks
 
         public string? Description { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime Date { get; set; }
 
         public DateTime LastOpened { get; set; }
 
@@ -25,6 +25,7 @@ namespace Jarvis.Models.Tasks
         public Priority Priority { get; set; }
 
         public List<TagModel> Tags { get; set; } = [];
+
         public List<SubstaskModel> Substasks { get; set; } = [];
     }
 }

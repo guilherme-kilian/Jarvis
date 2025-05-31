@@ -1,72 +1,49 @@
 ﻿using Jarvis.Exceptions;
+using Jarvis.Extensions;
 using Jarvis.Mock;
 using Jarvis.Models.User;
+using System.Net.Http.Json;
 
 namespace Jarvis.Clients
 {
     public interface IUserClient
     {
-        Task<UserModel> GetAsync(string email);
         Task<UserModel> CreateUserAsync(CreateUserModel create);
-        Task<bool> CheckPasswordAsync(string email, string password);
-    }
-
-    public class FakeUserClient : IUserClient
-    {
-
-        public Task<bool> CheckPasswordAsync(string email, string password)
-        {
-            var user = UsersMock.Users.FirstOrDefault(u => u.Email == email);
-
-            if (user is null)
-                return Task.FromResult(false);
-
-            return Task.FromResult(user.Password == password);
-        }
-
-        public Task<UserModel> CreateUserAsync(CreateUserModel create)
-        {
-            var user = new UserModel()
-            {
-                Email = create.Email,
-                Name = create.Name,
-                Password = create.Password,
-            };
-
-            UsersMock.Users.Add(user);
-
-            return Task.FromResult(user);
-        }
-
-        public Task<UserModel> GetAsync(string email)
-        {
-            var user = UsersMock.Users.FirstOrDefault(u => u.Email == email) 
-                ?? throw new NotFoundException("Usuário não encontrado");
-
-            return Task.FromResult(user);
-        }
+        Task<UserModel> GetAsync(long id);
+        Task<UserModel> UpdateAsync(long id, UpdateUserModel update);
+        Task<UserModel?> CheckPasswordAsync(string email, string password);
     }
 
     public class UserClient : IUserClient
     {
-        public Task<bool> CheckPasswordAsync(string email, string password)
+        private readonly HttpClient _client;
+
+        public UserClient(HttpClient client)
         {
-            throw new NotImplementedException();
+            _client = client;
         }
 
-        public Task<UserModel> CreateUserAsync(CreateUserModel create)
+        public async Task<UserModel> CreateUserAsync(CreateUserModel create)
         {
-            throw new NotImplementedException();
+            return await _client.PostFromJsonAsync<UserModel>("users", create);
         }
 
-        public Task<UserModel> GetAsync(string email)
+        public async Task<UserModel> GetAsync(long id)
         {
-            throw new NotImplementedException();
+            var user = await _client.GetFromJsonAsync<UserModel>($"users/{id}") 
+                ?? throw new NotFoundException("Usuário não encontrado");
+
+            return user;
         }
 
-        Task<bool> IUserClient.CheckPasswordAsync(string email, string password)
+        public Task<UserModel?> CheckPasswordAsync(string email, string password)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(UsersMock.Users.FirstOrDefault(u => u.Email == email && u.Password == password));
+        }
+
+        public async Task<UserModel> UpdateAsync(long id, UpdateUserModel update)
+        {
+            return await _client.PutFromJsonAsync<UserModel>($"users/{id}", update);
         }
     }
 }

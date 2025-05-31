@@ -8,6 +8,12 @@ namespace Jarvis.Models.Tasks
 
         public string? Title { get; set; }
 
-        public List<string>? Labels { get; set; }
+        public List<string>? Tags { get; set; }
+
+        public DateTime? Start { get; set; }
+
+        public DateTime? End { get; set; }
+
+        public bool? Completed { get; set; }
     }
 }

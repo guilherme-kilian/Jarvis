@@ -16,8 +16,9 @@ namespace Jarvis
                 });
 
             builder
-                .AddDependencyInjectionConfigs()
-                .AddLogConfigs();
+                .AddDependencyInjectionConfigs(out var appSettings)
+                .AddLogConfigs()
+                .AddHttpConfigs(appSettings);
 
             builder.Services.AddAuthorizationCore();
 

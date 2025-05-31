@@ -2,7 +2,7 @@
 {
     public class UpdateUserModel
     {
-        public int DailyMeta { get; set; }
+        public int WinTheDayGoal { get; set; }
         public string? Name { get; set; }
         public string? PictureUrl { get; set; }
     }

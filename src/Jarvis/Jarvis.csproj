@@ -61,6 +61,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="Models\User\UserModel.cs~RF3e342fc.TMP" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="MetroLog.Maui" Version="2.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.5" />
         <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.11.9" />

@@ -4,5 +4,6 @@
     {
         public required string Title { get; set; }
         public required string Color { get; set; }
+        public long UserId { get; set; }
     }
 }
