@@ -1,8 +1,41 @@
-﻿@using Jarvis.Models.User
+﻿@using Jarvis.Clients
+@using Jarvis.Models.User
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
+@inject ITaskClient _taskClient
 
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex flex-column">
+                <span>Ganhe o dia</span>
+                <small>@(_completedToday)/@(_totalToday) concluídas</small>
+            </div>
+             
+            <FluentProgressRing Max="100" Min="0" Value="@_percentage"
+                                Stroke=@ProgressStroke.Small
+                                Color="@(Color.Success.ToAttributeValue())">
+            </FluentProgressRing>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter, EditorRequired]
     public UserModel User { get; set; } = null!;
+
+    private int _totalToday;
+    private int _completedToday;
+
+    private int _percentage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var tasksToday = await _taskClient.GetAsync(DateTime.UtcNow.Date);
+
+        _totalToday = tasksToday.Count;
+        _completedToday = tasksToday.Count(t => t.IsDone);
+
+        _percentage = _completedToday * 100 / _totalToday;
+    }
 }

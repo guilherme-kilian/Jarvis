@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Jarvis.Components.Pages.Home.HomeTab
 @using Jarvis.Components.Pages.Shared
+@using Microsoft.FluentUI.AspNetCore.Components.Icons.Regular;
 
 @inject NavigationManager _navManager
 
@@ -9,46 +10,36 @@
     <text>Carregando...</text>
 }
 else
-{    
-    <div class="row">
-        <div class="col-md-3">
-            <img src="@(CascadingUser.User.ProfilePicture)" />
+{   
+    <div class="d-flex justify-content-between">
+        <img class="rounded-circle" src="@(CascadingUser.User.ProfilePicture)" height="75" width="75" />
+        <div class="d-flex flex-column justify-content-center align-items-center fs-4 gap-1">
+            <span>Bom dia ⛅</span>
+            <span class="fw-bold">@CascadingUser.User.Name</span>
         </div>
-
-        <div class="col-md-6">
-            <div class="d-flex flex-column align-items-center">
-                <span>Bom dia ⛅</span>
-                <span>@CascadingUser.User.Name</span>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.LauncherSettings())" OnClick=RedirectToSettingsPage />
-        </div>
+        <FluentIcon Value="@(new Size24.LauncherSettings())" OnClick=RedirectToSettingsPage />
     </div>
-    <div class="d-flex">
-        <FluentButton>Home</FluentButton>
-        <FluentButton>Buscar</FluentButton>
 
-        <FluentTabs>
-            <FluentTab Id="home">
-                <Header>
-                    <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Home())" /> Home
-                </Header>
-                <Content>
-                    <HomeContent User=CascadingUser.User />
-                </Content>
-            </FluentTab>
-            <FluentTab Id="search">
-                <Header>
-                    <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Search())" /> Buscar
-                </Header>
-                <Content>
-
-                </Content>
-            </FluentTab>
-        </FluentTabs>
-    </div>
+    <FluentTabs ActiveTabId="home-id" class="mt-4">
+        <FluentTab Id="home-id">
+            <Header>
+                <FluentIcon Value="@(new Size20.Home())" /> 
+                Home
+            </Header>
+            <Content>
+                <HomeContent User=CascadingUser.User />
+            </Content>
+        </FluentTab>
+        <FluentTab Id="search-id" >
+            <Header>
+                <FluentIcon Value="@(new Size20.Search())" /> 
+                Buscar
+            </Header>
+            <Content>
+                <span>salve</span>
+            </Content>
+        </FluentTab>
+    </FluentTabs>
 }
 
 

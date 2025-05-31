@@ -6,13 +6,13 @@
 @inject IUserClient _userClient
 @inject NavigationManager _navManager
 
-<FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowLeft())" />
+<FluentIcon OnClick="@(() => _navManager.NavigateTo("/"))" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowLeft())" />
 
 <span>Configurações</span>
 
 @if (_update is null)
 {
-    <p>Carregando...</p>
+    <FluentProgress></FluentProgress>    
 }
 else
 {

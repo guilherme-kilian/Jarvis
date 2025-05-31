@@ -7,6 +7,8 @@
 @layout LoginLayout
 @inject IAuthenticationService _authService
 @inject NavigationManager _navManager
+@inject PersistanceService _persistanceService
+@inject IJSRuntime _js
 
 <h5>Acessar conta</h5>
 
@@ -31,19 +33,39 @@
 
     private LoginFrontModel _model = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await _persistanceService.TryGetFromStorageAsync();
+
+        if (user != null)
+        {
+            await AutenticateAsync(user.Email, user.Password);
+        }
+    }
+
     private async Task HandleSubmitAsync()
     {
-        if (string.IsNullOrEmpty(_model.Email) || string.IsNullOrEmpty(_model.Password) || CascadingUser is null)
+        if (string.IsNullOrEmpty(_model.Email) || string.IsNullOrEmpty(_model.Password))
+            return;
+
+        await AutenticateAsync(_model.Email, _model.Password);
+    }
+
+    private async Task AutenticateAsync(string email, string password)
+    {
+        if (CascadingUser is null)
             return;
 
         try
         {
-            var user = await _authService.AuthenticateAsync(_model.Email, _model.Password);
-            CascadingUser.User = user;
+            var user = await _authService.AuthenticateAsync(email, password);
+
+            await CascadingUser.SetUserAsync(user);
+
             _navManager.NavigateTo("/");
         }
         catch (AuthenticationException)
-        {            
+        {
         }
     }
 }

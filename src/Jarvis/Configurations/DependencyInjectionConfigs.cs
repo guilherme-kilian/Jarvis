@@ -15,6 +15,7 @@ namespace Jarvis.Configurations
             builder.Services.AddScoped<ITagsClient, FakeTagsClient>();
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
             builder.Services.TryAddScoped<AuthenticationStateProvider, ExternalAuthStateProvider>();
+            builder.Services.TryAddScoped<PersistanceService>();
 
             return builder;
         }

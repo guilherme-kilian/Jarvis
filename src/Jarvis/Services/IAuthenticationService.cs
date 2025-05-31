@@ -16,6 +16,8 @@ namespace Jarvis.Services
         Task<UserModel> AuthenticateAsync(RegisterUserFrontModel create);
 
         Task<UserModel> AuthenticateAsync(string email, string password);
+
+        Task LogoutAsync();
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -96,6 +98,12 @@ namespace Jarvis.Services
             identitiy.AddClaims(claims);
 
             _currentUser = new ClaimsPrincipal(identitiy);
+        }
+
+        public Task LogoutAsync()
+        {
+            _currentUser = null;
+            return Task.CompletedTask;
         }
     }
 }

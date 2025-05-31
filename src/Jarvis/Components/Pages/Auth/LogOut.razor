@@ -1,0 +1,18 @@
+﻿@page "/logout"
+@using Jarvis.Services
+
+@inject IAuthenticationService _authService
+@inject PersistanceService _persistanceService
+@inject NavigationManager _navManager
+
+<p>Redirecionando...</p>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _authService.LogoutAsync();
+        await _persistanceService.ClearStorageAsync();
+        _navManager.NavigateTo("/", true);
+    }
+}

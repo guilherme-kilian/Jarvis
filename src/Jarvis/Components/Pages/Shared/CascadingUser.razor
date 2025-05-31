@@ -1,11 +1,12 @@
 ﻿@using Jarvis.Const
 @using Jarvis.Extensions
 @using Jarvis.Models.User
+@using Jarvis.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 
 @inject NavigationManager _navManager
-
+@inject PersistanceService _persistanceService
 
 <CascadingValue Value=this>
     @ChildContent
@@ -18,7 +19,13 @@
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
-    public UserModel? User { get; set; }
+    public UserModel? User { get; private set; }
+
+    public async Task SetUserAsync(UserModel user)
+    {
+        User = user;
+        await _persistanceService.SetToStorageAsync(user);
+    }
 
     protected override async Task OnInitializedAsync()
     {
