@@ -1,0 +1,38 @@
+﻿@page "/tags/create"
+
+@using Jarvis.Clients
+@using Jarvis.Exceptions
+@using Jarvis.Models.Tags
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
+
+@inject ITagsClient _tagsClient
+@inject IToastService _toasService
+@inject NavigationManager _navManager
+
+<FluentEditForm Model=_create>
+    <FluentTextField @bind-Value=@_create.Title />
+    <FluentTextField @bind-Value=@_create.Color />
+
+    <div>
+        <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
+    </div>
+</FluentEditForm>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public long TagId { get; set; }
+
+    private CreateTagModel _create = new();
+
+    private async Task SubmitAsync()
+    {
+        if (_create is null)
+            return;
+
+        await _tagsClient.CreateAsync(_create);
+
+        _toasService.ShowSuccess("Tag criada com sucesso!");
+        _navManager.NavigateTo("/tags");
+    }
+}

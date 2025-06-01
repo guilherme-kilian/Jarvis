@@ -1,0 +1,49 @@
+﻿@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.Shared
+@using Jarvis.Models.Tags
+@using Jarvis.Models.Tasks
+
+<FluentTextField @bind-Value=Task.Title />
+<FluentCheckbox @bind-Value=Task.IsEvent />
+
+<div class="d-flex">
+    <FluentDatePicker @bind-Value=Task.Date />
+
+    @if (Task.IsEvent)
+    {
+        <FluentTimePicker @bind-Value=Task.Date />
+    }
+</div>
+
+@if (Task.IsEvent)
+{
+    <FluentCheckbox @bind-Value=Task.IsRecurrent />
+
+    @if (Task.IsRecurrent)
+    {
+        <FluentSelect TOption="Recurrency"
+                      OptionText="@(opt => opt.ToString())"
+                      @bind-SelectedOption=@Task.Recurrent
+                      Items=@(Enum.GetValues<Recurrency>().ToList())>
+        </FluentSelect>
+    }
+}
+
+<FluentSelect TOption="Priority"
+              OptionText="@(opt => opt.ToString())"
+              @bind-SelectedOption=@Task.Priority
+              Items=@(Enum.GetValues<Priority>().ToList())>
+</FluentSelect>
+
+<TagInput Added=TagAdded CurrentTags=@(Task.Tags) Removed=TagRemoved />
+
+@code {
+    [Parameter, EditorRequired]
+    public UpdateTaskModel Task { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<TagModel> TagRemoved { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<TagModel> TagAdded { get; set; }
+}

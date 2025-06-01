@@ -1,0 +1,65 @@
+﻿@using Jarvis.Clients
+@using Jarvis.Models.Tags
+
+@inject ITagsClient _tagsClient
+
+<div class="d-flex gap-1">
+    @foreach (var tag in _mappedTags)
+    {
+        var background = $"background-color:{tag.Key.Color};";
+
+        <span @onclick="@(() => ToggleTag(tag))" class="badge badge-add" style="@background">
+            @if (tag.Value)
+            {
+                <FluentIcon Value="@(new Icons.Regular.Size20.Check())" />
+            }
+            else
+            {
+                <FluentIcon Value="@(new Icons.Regular.Size20.Add())" />
+            }
+            <span class="ms-2">@(tag.Key.Title)</span>
+        </span>
+    }
+</div>
+
+@code {
+    private Dictionary<TagModel, bool> _mappedTags = [];
+
+    [Parameter, EditorRequired]
+    public List<TagModel> CurrentTags { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public EventCallback<TagModel> Removed { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<TagModel> Added { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var tags = await _tagsClient.GetAsync();
+
+        _mappedTags = tags.ToDictionary(k => k, v => false);
+
+        foreach (var tag in tags)
+        {
+            if (CurrentTags.Contains(tag))
+            {
+                _mappedTags[tag] = true;
+            }
+        }
+    }
+
+    private async Task ToggleTag(KeyValuePair<TagModel, bool> tag)
+    {
+        if (tag.Value)
+        {
+            await Removed.InvokeAsync(tag.Key);
+        }
+        else
+        {
+            await Added.InvokeAsync(tag.Key);
+        }
+
+        _mappedTags[tag.Key] = !tag.Value;
+    }
+}

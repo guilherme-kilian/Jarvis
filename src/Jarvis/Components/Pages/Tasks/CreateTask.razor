@@ -4,24 +4,45 @@
 @using Jarvis.Models.Shared
 @using Jarvis.Models.Tags
 @using Jarvis.Models.Tasks
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
-@inject ITagsClient _tagsClient
+@inject ITaskClient _taskClient
+@inject IToastService _toastService
+
+
+<style>
+    .badge-add {
+        cursor: pointer;
+    }
+</style>
 
 <ConfigurationHeader Title="Criar Tarefa" />
 
-<FluentEditForm>
+<FluentEditForm Model="_create" OnValidSubmit=SubmitAsync>
     <FluentTextField @bind-Value=_create.Title />
     <FluentCheckbox @bind-Value=_create.IsEvent />
-    <FluentDatePicker @bind-Value=_create.Date />
-    <FluentCheckbox @bind-Value=_create.IsRecurrent />
 
-    @if (_create.IsRecurrent)
-    {
-        <FluentSelect TOption="Recurrency"
-                      OptionText="@(opt => opt.ToString())"
-                      @bind-SelectedOption=@_create.Recurrent
-                      Items=@(Enum.GetValues<Recurrency>().ToList())>
-        </FluentSelect>
+    <div class="d-flex">
+        <FluentDatePicker @bind-Value=_create.Date />
+
+        @if (_create.IsEvent)
+        {            
+            <FluentTimePicker @bind-Value=_create.Date />
+        }
+    </div>
+
+    @if (_create.IsEvent)
+    {        
+        <FluentCheckbox @bind-Value=_create.IsRecurrent />
+
+        @if (_create.IsRecurrent)
+        {
+            <FluentSelect TOption="Recurrency"
+                          OptionText="@(opt => opt.ToString())"
+                          @bind-SelectedOption=@_create.Recurrent
+                          Items=@(Enum.GetValues<Recurrency>().ToList())>
+            </FluentSelect>
+        }
     }
 
     <FluentSelect TOption="Priority"
@@ -30,19 +51,29 @@
                   Items=@(Enum.GetValues<Priority>().ToList())>
     </FluentSelect>
 
-    @foreach (var tag in _tags)
-    {
-        
-    }
+    <TagInput Added=TagAdded CurrentTags=@(new()) Removed=TagRemoved />
+       
+    <div>
+        <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
+    </div>
 </FluentEditForm>
 
 @code {
     private CreateTaskModel _create = new();
 
-    private List<TagModel> _tags = [];
-
-    protected override async Task OnInitializedAsync()
+    private async Task SubmitAsync()
     {
-        _tags = await _tagsClient.GetAsync();
+        await _taskClient.CreateAsync(_create);
+        _toastService.ShowSuccess("Sua tarefa foi criada com sucesso!");
+    }
+
+    private void TagAdded(TagModel tag)
+    {
+        _create.Tags.Add(tag);
+    }
+
+    private void TagRemoved(TagModel tag)
+    {
+        _create.Tags.Remove(tag);
     }
 }

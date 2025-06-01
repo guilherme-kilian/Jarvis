@@ -1,4 +1,5 @@
-﻿
+﻿@inject NavigationManager _navManager
+
 <FluentIcon OnClick="@(() => _navManager.NavigateTo("/"))" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowLeft())" />
 
 <span>@Title</span>

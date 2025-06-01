@@ -1,16 +1,29 @@
 ﻿@page "/tags"
 
 @using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
 @using Jarvis.Models.Tags
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 @inject ITagsClient _tagsClient
+@inject NavigationManager _navManager
 
-<h4>Tags</h4>
+<ConfigurationHeader Title="Tags" />
 
 @foreach (var tag in _tags)
 {
-    
+    <div class="d-flex justify-content-between">
+        <Tag TagModel=tag />
+        <FluentIcon OnClick=@(() => NavigateToEditTag(tag.Id)) Value="@(new Icons.Regular.Size20.EditSettings())"></FluentIcon>
+    </div>
+    <hr />
 }
+
+<div style="position:fixed; bottom:25px; right: 25px;">
+    <FluentButton OnClick=@(NavigateToCreateTag) Class="rounded-circle" Color=@(Color.Success.ToAttributeValue())>
+        <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Add())" />
+    </FluentButton>
+</div>
 
 
 @code {
@@ -20,5 +33,15 @@
     {
         _tags = await _tagsClient.GetAsync();
 
+    }
+
+    private void NavigateToEditTag(long tagId)
+    {
+        _navManager.NavigateTo($"/tags/{tagId}");
+    }
+
+    private void NavigateToCreateTag()
+    {
+        _navManager.NavigateTo("/tags/create");
     }
 }

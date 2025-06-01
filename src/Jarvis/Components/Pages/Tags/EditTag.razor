@@ -1,0 +1,85 @@
+﻿@page "/tags/{TagId:long}"
+@using Jarvis.Clients
+@using Jarvis.Exceptions
+@using Jarvis.Models.Tags
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
+
+@inject ITagsClient _tagsClient
+@inject IToastService _toasService
+@inject NavigationManager _navManager
+
+@if (_loading)
+{
+    <FluentProgress></FluentProgress>
+}
+else if(_notFound)
+{
+    <text>Tag não encontrada</text>
+}
+else if(_update is not null)
+{        
+    <FluentEditForm Model=_update>
+        <FluentTextField @bind-Value=@_update.Title />
+        <FluentTextField @bind-Value=@_update.Color />
+
+        <div class="d-flex justify-content-end" @onclick=@(RemoveAsync)>
+            <a class="text-danger" style="cursor:pointer;">Remover Tag</a>
+        </div>
+
+        <div>
+            <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
+        </div>
+    </FluentEditForm>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public long TagId { get; set; }
+
+    private UpdateTagModel? _update;
+
+    private bool _loading = true;
+    private bool _notFound = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var tag = await _tagsClient.GetAsync(TagId);
+
+            _update = new UpdateTagModel
+            {
+                Title = tag.Title,
+                Color = tag.Color
+            };
+        }
+        catch (NotFoundException)
+        {
+            _notFound = true;
+        }
+
+        _loading = false;
+    }
+
+    private async Task RemoveAsync()
+    {
+        await _tagsClient.DeleteAsync(TagId);
+        AfterExecuted("Tag removida com sucesso!");
+    }
+
+    private async Task SubmitAsync()
+    {
+        if(_update is null)
+            return;
+
+        await _tagsClient.UpdateAsync(TagId, _update);
+
+        AfterExecuted("Tag atualizada com sucesso!");
+    }
+
+    private void AfterExecuted(string message)
+    {
+        _toasService.ShowSuccess(message);
+        _navManager.NavigateTo("/tags");
+    }
+}

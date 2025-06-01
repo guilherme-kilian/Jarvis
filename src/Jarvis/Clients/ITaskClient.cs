@@ -11,7 +11,7 @@ namespace Jarvis.Clients
         Task<TaskModel> GetAsync(long id);
         Task<List<TaskModel>> GetAsync(DateTime date);
         Task<TaskModel> UpdateAsync(long id, UpdateTaskModel update);
-        Task<TaskModel> UpdateStatusAsync(long id, bool completed);
+        Task<TaskModel> UpdateStatusAsync(long id);
         Task<int> DeleteAsync(long id);
         Task<List<TaskModel>> SearchAsync(TaskFilterModel filter);
     }
@@ -59,9 +59,9 @@ namespace Jarvis.Clients
             return await _client.DeleteFromJsonAsync<int>($"tasks/{id}");
         }
 
-        public Task<TaskModel> UpdateStatusAsync(long id, bool completed)
+        public Task<TaskModel> UpdateStatusAsync(long id)
         {
-            throw new NotImplementedException();
+            return _client.PatchFromJsonAsync<TaskModel>($"tasks/{id}/status", null);
         }
     }
 }

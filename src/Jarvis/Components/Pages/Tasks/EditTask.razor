@@ -1,0 +1,109 @@
+﻿@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
+@using Jarvis.Exceptions
+@using Jarvis.Models.Tags
+@using Jarvis.Models.Tasks
+
+@inject ITaskClient _taskClient
+@inject IToastService _toastService
+
+@page "/tasks/{TaskId:long}"
+
+<ConfigurationHeader Title="Editar tarefa" />
+
+@if (_loading)
+{
+    <FluentProgress></FluentProgress>
+}
+else if (_notFound)
+{
+
+}
+else
+{    
+    <FluentEditForm>
+        <FluentTabs>
+            <FluentTab>
+                <Header>
+                    Geral
+                </Header>
+                <Content>
+                    <EditTaskGeneral Task=_task TagAdded=TagAdded TagRemoved=TagRemoved />
+                </Content>
+            </FluentTab>
+            <FluentTab>
+                <Header>
+                    Detalhes
+                </Header>
+                <Content>
+                    <EditTaskDetails Task=_task />
+                </Content>
+            </FluentTab>
+            <FluentTab>
+                <Header>
+                    Alertas
+                </Header>
+                <Content>
+                    <EditTaskAlerts Task=_task />
+                </Content>
+            </FluentTab>
+        </FluentTabs>
+    </FluentEditForm>
+}
+
+
+@code {
+    [Parameter]
+    public long TaskId { get; set; }
+
+    private UpdateTaskModel? _task;
+
+    private bool _notFound = false;
+
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {            
+            var task = await _taskClient.GetAsync(TaskId);
+
+            _task = new UpdateTaskModel
+            {
+                Title = task.Title,
+                IsEvent = task.IsEvent,
+                Date = task.Date,
+                IsRecurrent = task.IsRecurrent,
+                Recurrent = task.Recurrent,
+                Priority = task.Priority,
+                Tags = task.Tags
+            };
+        }
+        catch (NotFoundException)
+        {
+            _notFound = true;
+        }
+
+        _loading = false;
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (_task == null)
+            return;
+
+        await _taskClient.UpdateAsync(TaskId, _task);
+
+        _toastService.ShowSuccess("Tarefa editada com sucesso!");
+    }
+
+    private void TagAdded(TagModel tag)
+    {
+        _task?.Tags.Add(tag);
+    }
+
+    private void TagRemoved(TagModel tag)
+    {
+        _task?.Tags.Remove(tag);
+    }
+}

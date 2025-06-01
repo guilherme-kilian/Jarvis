@@ -1,0 +1,47 @@
+﻿@using Jarvis.Models.Substasks
+@using Jarvis.Models.Tasks
+
+<FluentTextArea @bind-Value=@Task.Description />
+
+@foreach (var subTask in Task.Subtasks)
+{
+    <FluentCheckbox @bind-Value=@(subTask.IsDone) Label=@(subTask.Title) />
+}
+
+@if (_addingSubTask)
+{
+    <input type="text" @bind=_newSubTask />
+    <FluentIcon OnClick=AddSubtask Value="new Icons.Regular.Size20.Check()" />
+}
+else
+{
+    <div style="cursor:pointer;" @onclick=ToggleAddingSubTask>
+        <FluentIcon Value="new Icons.Regular.Size20.Add()" /> <span>Adicionar</span>
+    </div>    
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public UpdateTaskModel Task { get; set; }
+
+    private bool _addingSubTask = false;
+
+    private string? _newSubTask;
+
+    private void ToggleAddingSubTask()
+    {
+        _addingSubTask = !_addingSubTask;
+    }
+
+    private void AddSubtask()
+    {
+        if (string.IsNullOrEmpty(_newSubTask))
+            return;
+
+        Task.Subtasks.Add(new() { Title = _newSubTask });
+
+        ToggleAddingSubTask();
+
+        _newSubTask = null;
+    }
+}

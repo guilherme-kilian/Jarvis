@@ -1,10 +1,10 @@
 ﻿@using Jarvis.Models.Tags
 
-@{
+@if (TagModel is not null)
+{    
     var backgroundColor = $"background-color: {TagModel.Color};";
+    <span class="badge" style="@(backgroundColor)">@TagModel.Title</span>
 }
-
-<span style="@backgroundColor" class="text-white">@TagModel.Title</span>
 
 @code {
     [Parameter, EditorRequired]

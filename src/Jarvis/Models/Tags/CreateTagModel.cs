@@ -1,9 +1,15 @@
-﻿namespace Jarvis.Models.Tags
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Jarvis.Models.Tags
 {
     public class CreateTagModel
     {
-        public required string Title { get; set; }
-        public required string Color { get; set; }
+        [Required]
+        public string? Title { get; set; }
+
+        [Required]
+        public string? Color { get; set; }
+
         public long UserId { get; set; }
     }
 }

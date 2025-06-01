@@ -2,6 +2,7 @@
 @using Jarvis.Clients
 @using Jarvis.Components.Pages.Shared
 @using Jarvis.Models.User
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 @inject IUserClient _userClient
 @inject NavigationManager _navManager
@@ -29,7 +30,7 @@ else
         <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
         <FluentNumberField Label="Meta diária" @bind-Value=_update.WinTheDayGoal />
         <div>
-            <FluentButton Type="ButtonType.Submit">Salvar</FluentButton>
+            <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
         </div>
     </FluentEditForm>
 }
