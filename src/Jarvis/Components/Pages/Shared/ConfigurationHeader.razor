@@ -1,0 +1,9 @@
+﻿
+<FluentIcon OnClick="@(() => _navManager.NavigateTo("/"))" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowLeft())" />
+
+<span>@Title</span>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+}

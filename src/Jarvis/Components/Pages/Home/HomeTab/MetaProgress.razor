@@ -36,6 +36,10 @@
         _totalToday = Tasks.Count;
         _completedToday = Tasks.Count(t => t.IsDone);
 
-        _percentage = _completedToday * 100 / _totalToday;
+        if (_totalToday == 0)
+            _percentage = 100;
+        else
+            _percentage = _completedToday * 100 / _totalToday;
+
     }
 }

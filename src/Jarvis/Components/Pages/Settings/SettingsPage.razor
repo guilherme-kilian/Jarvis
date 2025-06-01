@@ -6,13 +6,11 @@
 @inject IUserClient _userClient
 @inject NavigationManager _navManager
 
-<FluentIcon OnClick="@(() => _navManager.NavigateTo("/"))" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowLeft())" />
-
-<span>Configurações</span>
+<ConfigurationHeader Title="Configurações" />
 
 @if (_update is null)
 {
-    <FluentProgress></FluentProgress>    
+    <FluentProgress></FluentProgress>
 }
 else
 {
@@ -51,11 +49,11 @@ else
         var user = CascadingUser.User;
 
         _update = new()
-            {
-                WinTheDayGoal = user.WinTheDayGoal,
-                Name = user.Name,
-                PictureUrl = user.ProfilePicture,
-            };
+        {
+            WinTheDayGoal = user.WinTheDayGoal,
+            Name = user.Name,
+            PictureUrl = user.ProfilePicture,
+        };
     }
 
     private void RedirectToTags()

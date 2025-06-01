@@ -1,6 +1,48 @@
 ﻿@page "/tasks/create"
+@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.Shared
+@using Jarvis.Models.Tags
+@using Jarvis.Models.Tasks
 
+@inject ITagsClient _tagsClient
+
+<ConfigurationHeader Title="Criar Tarefa" />
+
+<FluentEditForm>
+    <FluentTextField @bind-Value=_create.Title />
+    <FluentCheckbox @bind-Value=_create.IsEvent />
+    <FluentDatePicker @bind-Value=_create.Date />
+    <FluentCheckbox @bind-Value=_create.IsRecurrent />
+
+    @if (_create.IsRecurrent)
+    {
+        <FluentSelect TOption="Recurrency"
+                      OptionText="@(opt => opt.ToString())"
+                      @bind-SelectedOption=@_create.Recurrent
+                      Items=@(Enum.GetValues<Recurrency>().ToList())>
+        </FluentSelect>
+    }
+
+    <FluentSelect TOption="Priority"
+                  OptionText="@(opt => opt.ToString())"
+                  @bind-SelectedOption=@_create.Priority
+                  Items=@(Enum.GetValues<Priority>().ToList())>
+    </FluentSelect>
+
+    @foreach (var tag in _tags)
+    {
+        
+    }
+</FluentEditForm>
 
 @code {
+    private CreateTaskModel _create = new();
 
+    private List<TagModel> _tags = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tags = await _tagsClient.GetAsync();
+    }
 }
