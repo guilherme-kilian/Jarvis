@@ -22,7 +22,7 @@ namespace Jarvis.Services
 
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IUserClient _client;
+        private readonly IJarvisApiClient _client;
 
         public event Action<ClaimsPrincipal>? UserChanged;
 
@@ -42,14 +42,14 @@ namespace Jarvis.Services
             }
         }
 
-        public AuthenticationService(IUserClient client)
+        public AuthenticationService(IJarvisApiClient client)
         {
             _client = client;
         }
 
         public async Task<UserModel> AuthenticateAsync(string email, string password)
         {
-            var user = await _client.CheckPasswordAsync(email, password) 
+            var user = await _client.Users.CheckPasswordAsync(email, password) 
                 ?? throw new AuthenticationException("Usuário ou senha inválido");
 
             Authenticate(user);
@@ -69,7 +69,7 @@ namespace Jarvis.Services
                 Password = create.Password,
             };
 
-            var user = await _client.CreateUserAsync(model);
+            var user = await _client.Users.CreateUserAsync(model);
 
             Authenticate(user);
 
