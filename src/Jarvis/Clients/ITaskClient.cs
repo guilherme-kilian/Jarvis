@@ -32,7 +32,7 @@ namespace Jarvis.Clients
                
         public Task<List<TaskModel>> GetAsync(DateTime date)
         {
-            return SearchAsync(new()
+            return SearchAsync(new TaskFilterModel()
             {
                 Start = date.Date,
                 End = date.Date.AddDays(1).AddTicks(-1),

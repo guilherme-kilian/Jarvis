@@ -45,13 +45,9 @@
         }
     }
 
-    <FluentSelect TOption="Priority"
-                  OptionText="@(opt => opt.ToString())"
-                  @bind-SelectedOption=@_create.Priority
-                  Items=@(Enum.GetValues<Priority>().ToList())>
-    </FluentSelect>
+    <PrioritySelectInput @bind-Value=@_create.Priority />
 
-    <TagInput Added=TagAdded CurrentTags=@(new()) Removed=TagRemoved />
+    <TagInput Added=TagAdded Removed=TagRemoved />
        
     <div>
         <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>

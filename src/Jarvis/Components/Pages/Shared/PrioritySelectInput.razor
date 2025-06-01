@@ -1,0 +1,43 @@
+﻿@using Jarvis.Models.Shared
+
+<FluentSelect OptionText="@(opt => opt.ToString())"
+              @bind-SelectedOption=@_text
+              @bind-SelectedOption:after=@ValueChangedAsync
+              Items=@(_options)>
+</FluentSelect>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public Priority? Value { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<Priority?> ValueChanged { get; set; }
+
+
+    private List<string> _options = [ _defaultText ];
+
+    private string _text = _defaultText;
+
+    private static string _defaultText = "Selecione uma prioridade";
+
+    protected override void OnInitialized()
+    {
+        _text = Value?.ToString() ?? _defaultText;
+        _options.AddRange(Enum.GetValues<Priority>().Select(p => p.ToString()));
+    }
+
+    private Task ValueChangedAsync()
+    {
+        if(Enum.TryParse<Priority>(_text, out var priority))
+        {
+            Value = priority;
+        }
+        else
+        {
+            Value = null;
+        }
+
+        return ValueChanged.InvokeAsync(Value);
+    }
+}

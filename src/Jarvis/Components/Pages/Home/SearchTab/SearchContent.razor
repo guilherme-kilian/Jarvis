@@ -1,9 +1,82 @@
-﻿
+﻿@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.Shared
+@using Jarvis.Models.Tags
+@using Jarvis.Models.Tasks
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
-<FluentSearch @bind-Value=@_searchQuery />
+@inject ITaskClient _taskClient
+
+<FluentEditForm Model=@_filter OnValidSubmit=@SearchAsync>
+    <FluentSearch @bind-Value=@_filter.Title @bind-Value:after=@SearchAsync>
+        <FluentIcon OnClick=ToggleAdvancedSearch Value="@(new Icons.Regular.Size16.Options())" Color="@Color.Neutral" Slot="end" />
+    </FluentSearch>
+
+    @if (_showAdvancedSearch)
+    {        
+        <AdvancedSearchForm Filter="_filter" />
+    }
+    else
+    {
+        <div class="d-flex gap-1">
+
+            @if (_filter.Priority.HasValue)
+            {
+                <span class="badge">@(_filter.Priority.ToString())</span>
+            }
+
+            @if (_filter.Start.HasValue)
+            {
+                <span class="badge">@($"{_filter.Start:dd/MM/yyyy}")</span>
+            }
+
+            @foreach (var tag in _filter.Tags)
+            {
+                <Tag TagModel=tag />
+            }
+        </div>
+    }
+
+    <div>
+        <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
+    </div>
+
+</FluentEditForm>
+
+@if (_tasks is not null)
+{
+    if(_tasks.Count == 0)
+    {
+        <p>Nenhuma tarefa encontrada.</p>
+    }
+    else
+    {
+        <p class="mb-3">@(_tasks.Count) resultados encontrados</p>
+
+        <div class="d-flex flex-column gap-2">
+            @foreach (var task in _tasks)
+            {
+                <TaskCard Task=task />
+            }
+        </div>
+    }
+}
 
 @code {
-    private string? _searchQuery;
 
+    private TaskFilterModel _filter = new();
 
+    private List<TaskModel>? _tasks;
+
+    private bool _showAdvancedSearch = false;
+
+    private void ToggleAdvancedSearch()
+    {
+        _showAdvancedSearch = !_showAdvancedSearch;
+    }
+
+    private async Task SearchAsync()
+    {
+        _tasks = await _taskClient.SearchAsync(_filter);
+    }
 }

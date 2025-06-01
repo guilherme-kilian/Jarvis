@@ -1,0 +1,37 @@
+﻿@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.Shared
+@using Jarvis.Models.Tags
+@using Jarvis.Models.Tasks
+
+<FluentDatePicker @bind-Value=Filter.Start @bind-Value:after=DateChanged />
+
+<PrioritySelectInput @bind-Value=Filter.Priority />
+
+<TagInput Added=TagAdded Removed=TagRemoved />
+
+@code {
+    [Parameter, EditorRequired]
+    public TaskFilterModel Filter { get; set; }
+
+    private void TagAdded(TagModel tag)
+    {
+        Filter.Tags.Add(tag);
+    }
+
+    private void TagRemoved(TagModel tag)
+    {
+        Filter.Tags.Remove(tag);
+    }
+
+    private void DateChanged()
+    {
+        if (Filter.Start.HasValue)
+        {
+            Filter.End = Filter.Start.Value.AddDays(1).AddTicks(-1);
+        }
+        else
+        {
+            Filter.End = null;
+        }
+    }
+}

@@ -8,8 +8,9 @@ namespace Jarvis.Models.Tasks
     {
         [Required]
         public string? Title { get; set; }
-        
-        public Priority Priority { get; set; }
+
+        [Required]
+        public Priority? Priority { get; set; }
         
         public List<TagModel> Tags { get; set; } = [];
         
