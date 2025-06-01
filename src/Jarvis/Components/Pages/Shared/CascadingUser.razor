@@ -42,6 +42,7 @@
 
         User = new UserModel
         {
+            Id = auth.User.GetId(),
             Email = auth.User.GetEmail(),
             Name = auth.User.GetName(),
             ProfilePicture = auth.User.GetProfilePicture(),

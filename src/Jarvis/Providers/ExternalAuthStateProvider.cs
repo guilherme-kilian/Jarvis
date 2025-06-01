@@ -7,11 +7,11 @@ namespace Jarvis.Providers
     {
         private AuthenticationState _currentUser;
 
-        public ExternalAuthStateProvider(IAuthenticationService service)
+        public ExternalAuthStateProvider(AuthenticatedUser authUser)
         {
-            _currentUser = new AuthenticationState(service.CurrentUser);
+            _currentUser = new AuthenticationState(authUser.CurrentUser);
 
-            service.UserChanged += (newUser) =>
+            authUser.UserChanged += (newUser) =>
             {
                 _currentUser = new AuthenticationState(newUser);
                 NotifyAuthenticationStateChanged(Task.FromResult(_currentUser));

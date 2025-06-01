@@ -28,7 +28,7 @@ namespace Jarvis.Clients
 
         public async Task<List<TagModel>> GetAsync()
         {
-            return await _client.GetFromJsonAsync<List<TagModel>>("tags", _options)
+            return await _client.GetFromJsonAsync<List<TagModel>>("tags?userId={{userId}}", _options)
                 ?? throw new NotFoundException("Tags não encontradas");
         }
 

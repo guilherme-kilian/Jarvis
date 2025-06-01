@@ -32,5 +32,18 @@ namespace Jarvis.Extensions
         {
             return principal.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
         }
+
+        public static int GetId(this ClaimsPrincipal principal)
+        {
+            var meta = principal.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (meta is null)
+                return 0;
+
+            if (!int.TryParse(meta.Value, out var dailyMeta))
+                return 0;
+
+            return dailyMeta;
+        }
     }
 }

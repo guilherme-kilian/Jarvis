@@ -7,23 +7,8 @@ using System.Security.Claims;
 
 namespace Jarvis.Services
 {
-    public interface IAuthenticationService
+    public class AuthenticatedUser
     {
-        event Action<ClaimsPrincipal>? UserChanged;
-
-        ClaimsPrincipal CurrentUser { get; set; }
-
-        Task<UserModel> AuthenticateAsync(RegisterUserFrontModel create);
-
-        Task<UserModel> AuthenticateAsync(string email, string password);
-
-        Task LogoutAsync();
-    }
-
-    public class AuthenticationService : IAuthenticationService
-    {
-        private readonly IJarvisApiClient _client;
-
         public event Action<ClaimsPrincipal>? UserChanged;
 
         private ClaimsPrincipal? _currentUser;
@@ -41,10 +26,26 @@ namespace Jarvis.Services
                 }
             }
         }
+    }
 
-        public AuthenticationService(IJarvisApiClient client)
+    public interface IAuthenticationService
+    {
+        Task<UserModel> AuthenticateAsync(RegisterUserFrontModel create);
+
+        Task<UserModel> AuthenticateAsync(string email, string password);
+
+        Task LogoutAsync();
+    }
+
+    public class AuthenticationService : IAuthenticationService
+    {
+        private readonly IJarvisApiClient _client;
+        private readonly AuthenticatedUser _autUser;
+
+        public AuthenticationService(IJarvisApiClient client, AuthenticatedUser user)
         {
             _client = client;
+            _autUser = user;
         }
 
         public async Task<UserModel> AuthenticateAsync(string email, string password)
@@ -79,6 +80,7 @@ namespace Jarvis.Services
         private void Authenticate(UserModel user)
         {
             List<Claim> claims = [
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
                     new(ClaimTypes.Email, user.Email),
                     new(ClaimTypesCustom.ProfilePicture, user.ProfilePicture ?? string.Empty),
@@ -90,12 +92,12 @@ namespace Jarvis.Services
 
             identitiy.AddClaims(claims);
 
-            _currentUser = new ClaimsPrincipal(identitiy);
+            _autUser.CurrentUser = new ClaimsPrincipal(identitiy);
         }
 
         public Task LogoutAsync()
         {
-            _currentUser = null;
+            _autUser.CurrentUser = new();
             return Task.CompletedTask;
         }
     }

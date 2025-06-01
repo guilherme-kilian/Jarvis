@@ -14,6 +14,7 @@ namespace Jarvis.Configurations
             builder.Configuration.AddJsonFile("appsettings.json", optional: false);
             appSettings = builder.Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>() ?? throw new ArgumentNullException(nameof(appSettings));
 
+            builder.Services.AddSingleton<AuthenticatedUser>();
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
             builder.Services.TryAddScoped<AuthenticationStateProvider, ExternalAuthStateProvider>();
             builder.Services.TryAddScoped<PersistanceService>();

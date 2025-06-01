@@ -1,4 +1,5 @@
 ﻿using Jarvis.Clients;
+using Jarvis.Handlers;
 
 namespace Jarvis.Configurations
 {
@@ -6,7 +7,10 @@ namespace Jarvis.Configurations
     {
         public static MauiAppBuilder AddHttpConfigs(this MauiAppBuilder builder, AppSettings appSettings)
         {
-            builder.Services.AddHttpClient<IJarvisApiClient, JarvisApiClient>(client => client.BaseAddress = appSettings.ApiUrl);
+            builder.Services.AddScoped<JarvisApiHandler>();
+
+            builder.Services.AddHttpClient<IJarvisApiClient, JarvisApiClient>(client => client.BaseAddress = appSettings.ApiUrl)
+                .AddHttpMessageHandler<JarvisApiHandler>();
 
             return builder;
         }
