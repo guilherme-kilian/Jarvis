@@ -6,6 +6,7 @@
 
 @inject IJarvisApiClient _apiClient
 @inject NavigationManager _navManager
+@inject IToastService _toastService
 
 <ConfigurationHeader Title="Configurações" />
 
@@ -21,10 +22,10 @@ else
     </div>
     <div class="d-flex justify-content-center">
         <img src="@_update.PictureUrl" />
-        <a href="javascript:;" @onclick=EditAsync></a>
+        <a href="javascript:;" @onclick=UploadNewProfilePhotoAsync>Editar foto</a>
     </div>
 
-    <FluentEditForm Model=_update>
+    <FluentEditForm Model=_update OnValidSubmit=EditAsync>
         <FluentTextField @bind-Value=_update.Name Label="Nome" />
         <FluentLabel>Tags</FluentLabel>
         <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
@@ -62,8 +63,18 @@ else
         _navManager.NavigateTo("/tags");
     }
 
-    private Task EditAsync()
+    private Task UploadNewProfilePhotoAsync()
     {
         return Task.CompletedTask;
+    }
+
+    private async Task EditAsync()
+    {
+        if(CascadingUser?.User is null || _update is null)
+            return;
+
+        await _apiClient.Users.UpdateAsync(CascadingUser.User.Id, _update);
+
+        _toastService.ShowSuccess("Usuário atualizado com sucesso!");
     }
 }
