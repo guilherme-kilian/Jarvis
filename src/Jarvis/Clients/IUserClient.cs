@@ -3,6 +3,7 @@ using Jarvis.Extensions;
 using Jarvis.Mock;
 using Jarvis.Models.User;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Jarvis.Clients
 {
@@ -17,10 +18,12 @@ namespace Jarvis.Clients
     public class UserClient : IUserClient
     {
         private readonly HttpClient _client;
+        private readonly JsonSerializerOptions _options;
 
-        public UserClient(HttpClient client)
+        public UserClient(HttpClient client, JsonSerializerOptions options)
         {
             _client = client;
+            _options = options;
         }
 
         public async Task<UserModel> CreateUserAsync(CreateUserModel create)
@@ -30,7 +33,7 @@ namespace Jarvis.Clients
 
         public async Task<UserModel> GetAsync(long id)
         {
-            var user = await _client.GetFromJsonAsync<UserModel>($"users/{id}") 
+            var user = await _client.GetFromJsonAsync<UserModel>($"users/{id}", _options) 
                 ?? throw new NotFoundException("Usuário não encontrado");
 
             return user;

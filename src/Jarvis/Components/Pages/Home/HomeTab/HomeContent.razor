@@ -4,7 +4,7 @@
 @using Jarvis.Models.User
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
-@inject ITaskClient _taskClient
+@inject IJarvisApiClient _apiClient
 @inject NavigationManager _navManager
 
 <MetaProgress Tasks="@_tasks" />
@@ -43,7 +43,7 @@
         if (User is null)
             return;
 
-        _tasks = await _taskClient.GetAsync(_date);
+        _tasks = await _apiClient.Tasks.GetAsync(_date);
     }
 
     private void RedirectToCreateTask()

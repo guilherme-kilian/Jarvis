@@ -5,7 +5,7 @@
 @using Jarvis.Models.Tags
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
-@inject ITagsClient _tagsClient
+@inject IJarvisApiClient _apiClient
 @inject IToastService _toasService
 @inject NavigationManager _navManager
 
@@ -30,7 +30,7 @@
         if (_create is null)
             return;
 
-        await _tagsClient.CreateAsync(_create);
+        await _apiClient.Tags.CreateAsync(_create);
 
         _toasService.ShowSuccess("Tag criada com sucesso!");
         _navManager.NavigateTo("/tags");

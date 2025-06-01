@@ -4,7 +4,7 @@
 @using Jarvis.Models.Tags
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
-@inject ITagsClient _tagsClient
+@inject IJarvisApiClient _apiClient
 @inject IToastService _toasService
 @inject NavigationManager _navManager
 
@@ -45,7 +45,7 @@ else if(_update is not null)
     {
         try
         {
-            var tag = await _tagsClient.GetAsync(TagId);
+            var tag = await _apiClient.Tags.GetAsync(TagId);
 
             _update = new UpdateTagModel
             {
@@ -63,7 +63,7 @@ else if(_update is not null)
 
     private async Task RemoveAsync()
     {
-        await _tagsClient.DeleteAsync(TagId);
+        await _apiClient.Tags.DeleteAsync(TagId);
         AfterExecuted("Tag removida com sucesso!");
     }
 
@@ -72,7 +72,7 @@ else if(_update is not null)
         if(_update is null)
             return;
 
-        await _tagsClient.UpdateAsync(TagId, _update);
+        await _apiClient.Tags.UpdateAsync(TagId, _update);
 
         AfterExecuted("Tag atualizada com sucesso!");
     }

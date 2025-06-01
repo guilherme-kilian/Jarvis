@@ -1,7 +1,7 @@
 ﻿@using Jarvis.Clients
 @using Jarvis.Models.Tags
 
-@inject ITagsClient _tagsClient
+@inject IJarvisApiClient _apiClient
 
 <div class="d-flex gap-1">
     @foreach (var tag in _mappedTags)
@@ -36,7 +36,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var tags = await _tagsClient.GetAsync();
+        var tags = await _apiClient.Tags.GetAsync();
 
         _mappedTags = tags.ToDictionary(k => k, v => false);
 

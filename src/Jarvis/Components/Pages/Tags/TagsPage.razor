@@ -5,7 +5,7 @@
 @using Jarvis.Models.Tags
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
-@inject ITagsClient _tagsClient
+@inject IJarvisApiClient _apiClient
 @inject NavigationManager _navManager
 
 <ConfigurationHeader Title="Tags" />
@@ -31,7 +31,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _tags = await _tagsClient.GetAsync();
+        _tags = await _apiClient.Tags.GetAsync();
 
     }
 

@@ -6,7 +6,7 @@
 @using Jarvis.Models.Tasks
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
-@inject ITaskClient _taskClient
+@inject IJarvisApiClient _apiClient
 @inject IToastService _toastService
 
 
@@ -59,7 +59,7 @@
 
     private async Task SubmitAsync()
     {
-        await _taskClient.CreateAsync(_create);
+        await _apiClient.Tasks.CreateAsync(_create);
         _toastService.ShowSuccess("Sua tarefa foi criada com sucesso!");
     }
 

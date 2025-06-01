@@ -2,6 +2,7 @@
 using Jarvis.Extensions;
 using Jarvis.Models.Tasks;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Jarvis.Clients
 {
@@ -19,10 +20,12 @@ namespace Jarvis.Clients
     public class TaskClient : ITaskClient
     {
         private readonly HttpClient _client;
+        private readonly JsonSerializerOptions _options;
 
-        public TaskClient(HttpClient client)
+        public TaskClient(HttpClient client, JsonSerializerOptions options)
         {
             _client = client;
+            _options = options;
         }
 
         public Task<TaskModel> CreateAsync(CreateTaskModel create)
@@ -41,7 +44,7 @@ namespace Jarvis.Clients
 
         public async Task<TaskModel> GetAsync(long id)
         {
-            return await _client.GetFromJsonAsync<TaskModel>($"tasks/{id}") ?? throw new NotFoundException("Task não encontrada");
+            return await _client.GetFromJsonAsync<TaskModel>($"tasks/{id}", _options) ?? throw new NotFoundException("Task não encontrada");
         }
 
         public Task<List<TaskModel>> SearchAsync(TaskFilterModel filter)
@@ -56,7 +59,7 @@ namespace Jarvis.Clients
 
         public async Task<int> DeleteAsync(long id)
         {
-            return await _client.DeleteFromJsonAsync<int>($"tasks/{id}");
+            return await _client.DeleteFromJsonAsync<int>($"tasks/{id}", _options);
         }
 
         public Task<TaskModel> UpdateStatusAsync(long id)
