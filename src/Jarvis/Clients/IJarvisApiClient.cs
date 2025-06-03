@@ -10,6 +10,8 @@ namespace Jarvis.Clients
         ITaskClient Tasks { get; }
 
         IUserClient Users { get; }
+
+        IWinTheDayClient WinTheDay { get; }
     }
 
     public class JarvisApiClient : IJarvisApiClient
@@ -29,5 +31,7 @@ namespace Jarvis.Clients
         public ITaskClient Tasks => new TaskClient(_client, _options);
 
         public IUserClient Users => new UserClient(_client, _options);
+
+        public IWinTheDayClient WinTheDay => new WinTheDayClient(_client, _options);
     }
 }

@@ -17,7 +17,7 @@ namespace Jarvis.Extensions
 
             return dailyMeta;
         }
-
+        
         public static string? GetProfilePicture(this ClaimsPrincipal principal)
         {
             return principal.FindFirst(ClaimTypesCustom.ProfilePicture)?.Value;
@@ -28,9 +28,19 @@ namespace Jarvis.Extensions
             return principal.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
         }
 
+        public static string GetLastName(this ClaimsPrincipal principal)
+        {
+            return principal.FindFirst(ClaimTypesCustom.LastName)?.Value ?? string.Empty;
+        }
+
         public static string GetEmail(this ClaimsPrincipal principal)
         {
             return principal.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+        }
+
+        public static string GetToken(this ClaimsPrincipal principal)
+        {
+            return principal.FindFirst(ClaimTypesCustom.Token)?.Value ?? string.Empty;
         }
 
         public static int GetId(this ClaimsPrincipal principal)

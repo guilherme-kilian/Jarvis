@@ -2,6 +2,7 @@
 @using Jarvis.Exceptions
 @using Jarvis.Models.Auth
 @using Jarvis.Components.Layout
+@using Jarvis.Models.User
 @using Jarvis.Services
 
 @layout LoginLayout
@@ -35,12 +36,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var user = await _persistanceService.TryGetFromStorageAsync();
-
-        if (user != null)
+        try
         {
-            ArgumentNullException.ThrowIfNullOrEmpty(user.Password);
-            await AutenticateAsync(user.Email, user.Password);
+            var token = await _persistanceService.TryGetFromStorageAsync();
+
+            if (token != null)
+            {
+                var user = await _authService.AuthenticateAsync(token);
+                await AfterAutenticateAsync(user);
+            }
+        }
+        catch
+        {
+            await _persistanceService.ClearStorageAsync();
         }
     }
 
@@ -49,24 +57,23 @@
         if (string.IsNullOrEmpty(_model.Email) || string.IsNullOrEmpty(_model.Password))
             return;
 
-        await AutenticateAsync(_model.Email, _model.Password);
-    }
-
-    private async Task AutenticateAsync(string email, string password)
-    {
-        if (CascadingUser is null)
-            return;
-
         try
         {
-            var user = await _authService.AuthenticateAsync(email, password);
-
-            await CascadingUser.SetUserAsync(user);
-
-            _navManager.NavigateTo("/");
+            var user = await _authService.AuthenticateAsync(new LoginModel() { Email = _model.Email, Password = _model.Password });
+            await AfterAutenticateAsync(user);
         }
         catch (AuthenticationException)
         {
         }
+    }
+
+    private async Task AfterAutenticateAsync(FullUserModel user)
+    {
+        if (CascadingUser is null)
+            return;
+
+        await CascadingUser.SetUserAsync(user);
+
+        _navManager.NavigateTo("/");
     }
 }

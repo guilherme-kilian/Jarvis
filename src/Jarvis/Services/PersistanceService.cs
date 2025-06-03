@@ -14,7 +14,7 @@ namespace Jarvis.Services
             _js = js;
         }
 
-        public async Task<UserModel?> TryGetFromStorageAsync()
+        public async Task<string?> TryGetFromStorageAsync()
         {
             var res = await _js.InvokeAsync<string?>("localStorage.getItem", _userKey);
 
@@ -23,12 +23,12 @@ namespace Jarvis.Services
                 return null;
             }
 
-            return JsonSerializer.Deserialize<UserModel>(res);
+            return JsonSerializer.Deserialize<string>(res);
         }
 
-        public async Task SetToStorageAsync(UserModel user)
+        public async Task SetToStorageAsync(string token)
         {
-            await _js.InvokeVoidAsync("localStorage.setItem", _userKey, JsonSerializer.Serialize(user));
+            await _js.InvokeVoidAsync("localStorage.setItem", _userKey, JsonSerializer.Serialize(token));
         }
 
         public async Task ClearStorageAsync()

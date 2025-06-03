@@ -17,21 +17,29 @@ namespace Jarvis.Handlers
             _authUser = authUser;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if(request.RequestUri != null && request.RequestUri.OriginalString.Contains("{{userId}}"))
-            {
-                if (_authUser.CurrentUser.Identity?.IsAuthenticated ?? false)
-                {
-                    var userId = _authUser.CurrentUser.GetId();
+            var token = _authUser.CurrentUser.GetToken();
 
-                    var builder = new UriBuilder(request.RequestUri.OriginalString.Replace("{{userId}}", userId.ToString()));
+            if(!string.IsNullOrEmpty(token))
+                request.Headers.Authorization = new("Bearer", token);
 
-                    request.RequestUri = builder.Uri;
-                }
-            }
-
-            return await base.SendAsync(request, cancellationToken);
+            return base.SendAsync(request, cancellationToken);
         }
+
+        //private void InjectUserId(HttpRequestMessage request)
+        //{
+        //    if (request.RequestUri != null && request.RequestUri.OriginalString.Contains("{{userId}}"))
+        //    {
+        //        if (_authUser.CurrentUser.Identity?.IsAuthenticated ?? false)
+        //        {
+        //            var userId = _authUser.CurrentUser.GetId();
+
+        //            var builder = new UriBuilder(request.RequestUri.OriginalString.Replace("{{userId}}", userId.ToString()));
+
+        //            request.RequestUri = builder.Uri;
+        //        }
+        //    }
+        //}
     }
 }

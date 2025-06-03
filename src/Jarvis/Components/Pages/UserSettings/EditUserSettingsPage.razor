@@ -52,7 +52,7 @@ else
 
         _update = new()
         {
-            WinTheDayGoal = user.WinTheDayGoal,
+            WinTheDayGoal = 0,
             Name = user.Name,
             PictureUrl = user.ProfilePicture,
         };
@@ -73,7 +73,7 @@ else
         if(CascadingUser?.User is null || _update is null)
             return;
 
-        await _apiClient.Users.UpdateAsync(CascadingUser.User.Id, _update);
+        await _apiClient.Users.UpdateAsync(_update);
 
         _toastService.ShowSuccess("Usuário atualizado com sucesso!");
     }

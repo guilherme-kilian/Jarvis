@@ -21,10 +21,10 @@
 
     public UserModel? User { get; private set; }
 
-    public async Task SetUserAsync(UserModel user)
+    public async Task SetUserAsync(FullUserModel user)
     {
         User = user;
-        await _persistanceService.SetToStorageAsync(user);
+        await _persistanceService.SetToStorageAsync(user.Token);
     }
 
     protected override async Task OnInitializedAsync()
@@ -40,14 +40,15 @@
             return;
         }
 
-        User = new UserModel
+        User = new FullUserModel
         {
-            Id = auth.User.GetId(),
-            Email = auth.User.GetEmail(),
+            // Id = auth.User.GetId(),
+            // Email = auth.User.GetEmail(),
             Name = auth.User.GetName(),
+            LastName = auth.User.GetLastName(),
             ProfilePicture = auth.User.GetProfilePicture(),
             WinTheDayGoal = auth.User.GetDailyMeta(),
-            Password = string.Empty,
+            Token = auth.User.GetToken(),
         };
     }
 }
