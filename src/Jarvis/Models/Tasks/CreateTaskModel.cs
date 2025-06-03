@@ -12,7 +12,7 @@ namespace Jarvis.Models.Tasks
         [Required]
         public Priority? Priority { get; set; }
         
-        public List<TagModel> Tags { get; set; } = [];
+        public List<long> Tags { get; set; } = [];
         
         public bool IsEvent { get; set; }
         

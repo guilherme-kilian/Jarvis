@@ -1,6 +1,6 @@
 ﻿@using Jarvis.Models.Shared
 
-<FluentSelect OptionText="@(opt => opt.ToString())"
+<FluentSelect Label="Prioridade" OptionText="@(opt => opt.ToString())"
               @bind-SelectedOption=@_text
               @bind-SelectedOption:after=@ValueChangedAsync
               Items=@(_options)>

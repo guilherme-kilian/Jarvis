@@ -3,7 +3,7 @@
 
 @inject IJarvisApiClient _apiClient
 
-<div class="d-flex gap-1">
+<div class="d-flex gap-2">
     @foreach (var tag in _mappedTags)
     {
         var background = $"background-color:{tag.Key.Color};";
@@ -11,7 +11,7 @@
         <span @onclick="@(() => ToggleTag(tag))" class="badge badge-add" style="@background">
             @if (tag.Value)
             {
-                <FluentIcon Value="@(new Icons.Regular.Size20.Check())" />
+                <FluentIcon Value="@(new Icons.Regular.Size20.Checkmark())" />
             }
             else
             {

@@ -17,8 +17,8 @@ else if(_notFound)
     <text>Tag não encontrada</text>
 }
 else if(_update is not null)
-{        
-    <FluentEditForm Model=_update>
+{
+    <FluentEditForm Model=_update OnValidSubmit=SubmitAsync>
         <FluentTextField @bind-Value=@_update.Title />
         <FluentTextField @bind-Value=@_update.Color />
 
@@ -39,7 +39,7 @@ else if(_update is not null)
     private UpdateTagModel? _update;
 
     private bool _loading = true;
-    private bool _notFound = true;
+    private bool _notFound = false;
 
     protected override async Task OnInitializedAsync()
     {
