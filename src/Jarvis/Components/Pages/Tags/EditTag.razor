@@ -1,5 +1,6 @@
 ﻿@page "/tags/{TagId:long}"
 @using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
 @using Jarvis.Exceptions
 @using Jarvis.Models.Tags
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
@@ -26,9 +27,7 @@ else if(_update is not null)
             <a class="text-danger" style="cursor:pointer;">Remover Tag</a>
         </div>
 
-        <div>
-            <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
-        </div>
+        <SubmitButton />
     </FluentEditForm>
 }
 

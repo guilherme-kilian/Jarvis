@@ -31,9 +31,7 @@ else
         <FluentLabel>Tags</FluentLabel>
         <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
         <FluentNumberField Label="Meta diária" @bind-Value=_update.WinTheDayGoal />
-        <div>
-            <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
-        </div>
+        <SubmitButton />
     </FluentEditForm>
 }
 

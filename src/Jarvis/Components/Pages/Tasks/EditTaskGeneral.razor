@@ -3,21 +3,25 @@
 @using Jarvis.Models.Tags
 @using Jarvis.Models.Tasks
 
-<FluentTextField @bind-Value=Task.Title />
-<FluentCheckbox @bind-Value=Task.IsEvent />
+<FluentTextField @bind-Value=Task.Title Label="Título" />
+<FluentCheckbox @bind-Value=Task.IsEvent Label="Isso é um evento" />
 
 <div class="d-flex">
-    <FluentDatePicker @bind-Value=Task.Date />
+    <div class="d-flex flex-column">
+        <FluentDatePicker @bind-Value=Task.Date Label="Data" />
+    </div>
 
     @if (Task.IsEvent)
     {
-        <FluentTimePicker @bind-Value=Task.Date />
+        <div class="d-flex flex-column">
+            <FluentTimePicker @bind-Value=Task.Date Label="Hora" />
+        </div>
     }
 </div>
 
 @if (Task.IsEvent)
 {
-    <FluentCheckbox @bind-Value=Task.IsRecurrent />
+    <FluentCheckbox @bind-Value=Task.IsRecurrent Label="Recorrente" />
 
     @if (Task.IsRecurrent)
     {
@@ -28,8 +32,7 @@
         </FluentSelect>
     }
 }
-
-<FluentSelect TOption="Priority"
+<FluentSelect Label="Prioridade"
               OptionText="@(opt => opt.ToString())"
               @bind-SelectedOption=@Task.Priority
               Items=@(Enum.GetValues<Priority>().ToList())>

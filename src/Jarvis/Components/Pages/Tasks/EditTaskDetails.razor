@@ -1,7 +1,10 @@
 ﻿@using Jarvis.Models.Substasks
 @using Jarvis.Models.Tasks
 
-<FluentTextArea @bind-Value=@Task.Description />
+<FluentTextArea Label="Descrição" @bind-Value=@Task.Description />
+
+
+<FluentLabel>Subtarefas</FluentLabel>
 
 @foreach (var subTask in Task.Subtasks)
 {

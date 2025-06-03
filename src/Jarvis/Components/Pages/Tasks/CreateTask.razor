@@ -52,13 +52,10 @@
 
         <PrioritySelectInput @bind-Value=@_create.Priority />
         
-        <FluentLabel>Tags</FluentLabel>
         <TagInput Added=TagAdded Removed=TagRemoved />
     </div>
        
-    <div>
-        <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
-    </div>
+    <SubmitButton />
 </FluentEditForm>
 
 @code {

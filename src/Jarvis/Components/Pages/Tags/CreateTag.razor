@@ -16,9 +16,7 @@
     <FluentTextField @bind-Value=@_create.Title Label="Titulo" />
     <FluentTextField @bind-Value=@_create.Color Label="Cor" />
 
-    <div>
-        <FluentButton Color="@Color.Success.ToAttributeValue()" Type="ButtonType.Submit">Salvar</FluentButton>
-    </div>
+    <SubmitButton />
 </FluentEditForm>
 
 @code {
