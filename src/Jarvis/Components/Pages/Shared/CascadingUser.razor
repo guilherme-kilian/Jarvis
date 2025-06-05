@@ -21,10 +21,15 @@
 
     public UserModel User { get; private set; } = default!;
 
-    public async Task SetUserAsync(FullUserModel user)
+    public async Task StoreUserAsync(FullUserModel user)
     {
         User = user;
         await _persistanceService.SetToStorageAsync(user.Token);
+    }
+
+    public void UpdateUser(UserModel user)
+    {
+        User = user;
     }
 
     protected override async Task OnInitializedAsync()
@@ -46,7 +51,7 @@
             // Email = auth.User.GetEmail(),
             Name = auth.User.GetName(),
             LastName = auth.User.GetLastName(),
-            ProfilePicture = auth.User.GetProfilePicture(),
+            ProfilePictureUrl = auth.User.GetProfilePicture(),
             WinTheDayGoal = auth.User.GetDailyMeta(),
             Token = auth.User.GetToken(),
         };

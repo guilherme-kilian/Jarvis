@@ -20,9 +20,9 @@ else
         <FluentButton>Geral</FluentButton>
         <FluentButton>Integrações</FluentButton>
     </div>
-    <div class="d-flex justify-content-center">
-        <img src="@_update.PictureUrl" />
-        <a href="javascript:;" @onclick=UploadNewProfilePhotoAsync>Editar foto</a>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <img class="rounded-circle mb-2" src="@(CascadingUser.User.ProfilePictureUrl)" height="75" width="75" />
+        <InputFile class="form-control w-50" OnChange=UploadNewProfilePhoto>Editar foto</InputFile>
     </div>
 
     <FluentEditForm Model=_update OnValidSubmit=EditAsync>
@@ -38,9 +38,12 @@ else
 
 @code {
     [CascadingParameter, EditorRequired]
-    private CascadingUser? CascadingUser { get; set; }
+    private CascadingUser CascadingUser { get; set; } = default!;
 
     private UpdateUserModel? _update;
+
+    private Stream? _profilePicture;
+    private string? _profilePictureName;
 
     protected override void OnInitialized()
     {
@@ -54,7 +57,6 @@ else
             WinTheDayGoal = user.WinTheDayGoal ?? 0,
             Name = user.Name,
             LastName = user.LastName,
-            PictureUrl = user.ProfilePicture,
         };
     }
 
@@ -63,17 +65,29 @@ else
         _navManager.NavigateTo("/tags");
     }
 
-    private Task UploadNewProfilePhotoAsync()
+    private void UploadNewProfilePhoto(InputFileChangeEventArgs args)
     {
-        return Task.CompletedTask;
+        if (_update is null)
+            return;
+
+        _profilePicture = args.File.OpenReadStream();
+        _profilePictureName = args.File.Name;
     }
 
     private async Task EditAsync()
     {
-        if(CascadingUser?.User is null || _update is null)
+        if (CascadingUser?.User is null || _update is null)
             return;
 
-        await _apiClient.Users.UpdateAsync(_update);
+        if (_profilePicture is null || string.IsNullOrEmpty(_profilePictureName))
+        {
+            _toastService.ShowWarning("Envie uma foto de perfil para prosseguir");
+            return;
+        }
+
+        var user = await _apiClient.Users.UpdateAsync(_update, _profilePicture, _profilePictureName);
+
+        CascadingUser.UpdateUser(user);
 
         _toastService.ShowSuccess("Usuário atualizado com sucesso!");
     }

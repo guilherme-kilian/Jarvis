@@ -40,7 +40,7 @@
         try
         {
             var user = await _authService.AuthenticateAsync(_model);
-            await CascadingUser.SetUserAsync(user);
+            await CascadingUser.StoreUserAsync(user);
             _navManager.NavigateTo("/");
         }
         catch (AuthenticationException)

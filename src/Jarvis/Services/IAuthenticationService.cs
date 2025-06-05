@@ -78,11 +78,15 @@ namespace Jarvis.Services
             if(nameParts.Length < 2)
                 throw new InvalidOperationException("Nome incompleto");
 
+            var firstName = nameParts.First();
+
+            var lastName = string.Join(" ", nameParts.Skip(1));
+
             var model = new CreateUserModel
             {
                 Email = create.Email,
-                Name = nameParts.First(),
-                LastName = string.Join(" ", nameParts),
+                Name = firstName,
+                LastName = lastName,
                 Password = create.Password,
             };
 
@@ -105,7 +109,7 @@ namespace Jarvis.Services
                     //new(ClaimTypes.Email, user.Email),
                     new(ClaimTypesCustom.Token, user.Token),
                     new Claim(ClaimTypesCustom.LastName, user.LastName),
-                    new(ClaimTypesCustom.ProfilePicture, user.ProfilePicture ?? string.Empty),
+                    new(ClaimTypesCustom.ProfilePicture, user.ProfilePictureUrl ?? string.Empty),
                     new Claim(ClaimTypes.Role, "User"),
                 ];
 
@@ -123,7 +127,7 @@ namespace Jarvis.Services
                 Name = user.Name,
                 LastName = user.LastName,
                 WinTheDayGoal = user.WinTheDayGoal,
-                ProfilePicture = user.ProfilePicture ?? string.Empty,
+                ProfilePictureUrl = user.ProfilePictureUrl ?? string.Empty,
                 Token = token,                
             };
         }

@@ -16,27 +16,25 @@ namespace Jarvis.Clients
     public class WinTheDayClient : IWinTheDayClient
     {
         private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _options;
 
-        public WinTheDayClient(HttpClient client, JsonSerializerOptions options)
+        public WinTheDayClient(HttpClient client)
         {
             _client = client;
-            _options = options;
         }
 
         public async Task DecrementAsync(long taskId)
         {
-            _ = await _client.DeleteFromJsonAsync<string>($"win-the-day/{taskId}", _options) ?? throw new NotFoundException("WinTheDay not found");
+            _ = await _client.DeleteJsonAsync<string>($"win-the-day/{taskId}");
         }
 
-        public async Task<WinTheDayModel> GetAsync()
+        public Task<WinTheDayModel> GetAsync()
         {
-            return await _client.GetFromJsonAsync<WinTheDayModel>("win-the-day", _options) ?? throw new NotFoundException("WinTheDay not found");
+            return _client.GetJsonAsync<WinTheDayModel>("win-the-day");
         }
 
         public Task IncrementAsync(long taskId)
         {
-            return _client.PostFromJsonAsync<string>($"win-the-day/{taskId}", null);
+            return _client.PostJsonAsync<string>($"win-the-day/{taskId}", null);
         }
     }
 }

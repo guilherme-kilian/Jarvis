@@ -20,17 +20,15 @@ namespace Jarvis.Clients
     public class TaskClient : ITaskClient
     {
         private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _options;
 
-        public TaskClient(HttpClient client, JsonSerializerOptions options)
+        public TaskClient(HttpClient client)
         {
             _client = client;
-            _options = options;
         }
 
         public Task<TaskModel> CreateAsync(CreateTaskModel create)
         {
-            return _client.PostFromJsonAsync<TaskModel>($"tasks", create);
+            return _client.PostJsonAsync<TaskModel>("tasks", create);
         }
                
         public Task<List<TaskModel>> GetAsync(DateTime date)
@@ -42,29 +40,29 @@ namespace Jarvis.Clients
             });
         }
 
-        public async Task<TaskModel> GetAsync(long id)
+        public Task<TaskModel> GetAsync(long id)
         {
-            return await _client.GetFromJsonAsync<TaskModel>($"tasks/{id}", _options) ?? throw new NotFoundException("Task não encontrada");
+            return _client.GetJsonAsync<TaskModel>($"tasks/{id}");
         }
 
         public Task<List<TaskModel>> SearchAsync(TaskFilterModel filter)
         {
-            return _client.PostFromJsonAsync<List<TaskModel>>("tasks/filter", filter);
+            return _client.PostJsonAsync<List<TaskModel>>("tasks/filter", filter);
         }
 
         public Task<TaskModel> UpdateAsync(long id, UpdateTaskModel update)
         {
-            return _client.PutFromJsonAsync<TaskModel>($"tasks/{id}", update);
+            return _client.PutJsonAsync<TaskModel>($"tasks/{id}", update);
         }
 
-        public async Task<int> DeleteAsync(long id)
+        public Task<int> DeleteAsync(long id)
         {
-            return await _client.DeleteFromJsonAsync<int>($"tasks/{id}", _options);
+            return _client.DeleteJsonAsync<int>($"tasks/{id}");
         }
 
         public Task<TaskModel> UpdateStatusAsync(long id)
         {
-            return _client.PatchFromJsonAsync<TaskModel>($"tasks/{id}/status", null);
+            return _client.PatchJsonAsync<TaskModel>($"tasks/{id}/status", null);
         }
     }
 }

@@ -18,42 +18,35 @@ namespace Jarvis.Clients
     public class TagsClient : ITagsClient
     {
         private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _options;
 
-        public TagsClient(HttpClient client, JsonSerializerOptions options)
+        public TagsClient(HttpClient client)
         {
             _client = client;
-            _options = options;
         }
 
         public async Task<List<TagModel>> GetAsync()
         {
-            return await _client.GetFromJsonAsync<List<TagModel>>("tags", _options)
-                ?? throw new NotFoundException("Tags não encontradas");
+            return await _client.GetJsonAsync<List<TagModel>>("tags");
         }
 
         public async Task<TagModel> GetAsync(long id)
         {
-            return await _client.GetFromJsonAsync<TagModel>($"tags/{id}", _options)
-                ?? throw new NotFoundException("Tag não encontrada");
+            return await _client.GetJsonAsync<TagModel>($"tags/{id}");
         }
 
         public Task<TagModel> CreateAsync(CreateTagModel create)
         {
-            return _client.PostFromJsonAsync<TagModel>("tags", create);
+            return _client.PostJsonAsync<TagModel>("tags", create);
         }
 
         public Task<TagModel> UpdateAsync(long id, UpdateTagModel update)
         {
-            return _client.PutFromJsonAsync<TagModel>($"tags/{id}", update);
+            return _client.PutJsonAsync<TagModel>($"tags/{id}", update);
         }
 
-        public async Task DeleteAsync(long id)
+        public Task DeleteAsync(long id)
         {
-            var response = await _client.DeleteAsync($"tags/{id}");
-
-            if (!response.IsSuccessStatusCode)
-                throw new HttpException(response.StatusCode, await response.Content.ReadAsStringAsync());
+            return _client.DeleteJsonAsync<string>($"tags/{id}");
         }
     }
 }

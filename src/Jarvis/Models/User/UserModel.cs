@@ -12,6 +12,6 @@
         public required string Name { get; set; }
         public required string LastName { get; set; }        
         public int? WinTheDayGoal { get; set; }
-        public string? ProfilePicture { get; set; }
+        public string? ProfilePictureUrl { get; set; }
     }
 }

@@ -72,7 +72,7 @@
         if (CascadingUser is null)
             return;
 
-        await CascadingUser.SetUserAsync(user);
+        await CascadingUser.StoreUserAsync(user);
 
         _navManager.NavigateTo("/");
     }

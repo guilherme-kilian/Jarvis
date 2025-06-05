@@ -18,20 +18,17 @@ namespace Jarvis.Clients
     {
         private readonly HttpClient _client;
 
-        private readonly JsonSerializerOptions _options;
-
         public JarvisApiClient(HttpClient client)
         {
             _client = client;
-            _options = JsonUtils.GetOptions();
         }
 
-        public ITagsClient Tags => new TagsClient(_client, _options);
+        public ITagsClient Tags => new TagsClient(_client);
 
-        public ITaskClient Tasks => new TaskClient(_client, _options);
+        public ITaskClient Tasks => new TaskClient(_client);
 
-        public IUserClient Users => new UserClient(_client, _options);
+        public IUserClient Users => new UserClient(_client);
 
-        public IWinTheDayClient WinTheDay => new WinTheDayClient(_client, _options);
+        public IWinTheDayClient WinTheDay => new WinTheDayClient(_client);
     }
 }
