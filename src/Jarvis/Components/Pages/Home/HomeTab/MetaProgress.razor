@@ -7,22 +7,41 @@
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 @inject IJarvisApiClient _apiClient
+@inject NavigationManager _navManager
 
 <div class="card mt-4">
     <div class="card-body">
         <div class="d-flex justify-content-between">
             <div class="d-flex flex-column">
                 <span>Ganhe o dia 🎯</span>
-                <small>@(_model.Completed)/@(_model.TotalGoal) concluídas</small>
+                <small>
+                    @if (_hasMeta)
+                    {
+                        <text>@(_model.Completed)/@(_model.TotalGoal) concluídas</text>
+                    }
+                    else
+                    {
+                        <text>Sem meta definida</text>
+                    }
+                </small>
             </div>
-            <FluentProgressRing Max="100" Min="0" Value="@_percentage"
-                                Stroke=@ProgressStroke.Small
-                                Color="@(Color.Success.ToAttributeValue())">
-                <ChildContent>
-                    @(_percentage)%
-                </ChildContent>
+            <div>
+                @if (_hasMeta)
+                {                    
+                    <FluentProgressRing Max="100" Min="0" Value="@_percentage"
+                                        Stroke=@ProgressStroke.Small
+                                        Color="@(Color.Success.ToAttributeValue())">
+                        <ChildContent>
+                            @(_percentage)%
+                        </ChildContent>
 
-            </FluentProgressRing>
+                    </FluentProgressRing>
+                }
+                else
+                {
+                    <button @onclick=RedirectToMeta class="btn btn-success">Definir meta 🚀</button>
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -32,13 +51,24 @@
     [Parameter, EditorRequired]
     public List<TaskModel> Tasks { get; set; } = [];
 
+    [Parameter, EditorRequired]
+    public DateTime Date { get; set; }
+
     private int _percentage;
 
     private WinTheDayModel _model = new();
+
+    private bool _hasMeta;
 
     protected override async Task OnInitializedAsync()
     {
         _model = await _apiClient.WinTheDay.GetAsync();
         _percentage = (int)MathUtils.GetPercentage(_model.Completed, _model.TotalGoal);
+        _hasMeta = _model.Tasks.Count > 0 && Date.Date == DateTime.Now.Date;
+    }
+
+    private void RedirectToMeta()
+    {
+        _navManager.NavigateTo("/meta");
     }
 }

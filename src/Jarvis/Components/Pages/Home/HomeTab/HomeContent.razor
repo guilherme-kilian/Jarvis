@@ -7,28 +7,31 @@
 @inject IJarvisApiClient _apiClient
 @inject NavigationManager _navManager
 
-<MetaProgress Tasks="@_tasks" />
+<div class="d-flex flex-column gap-3">
+    <MetaProgress Date=_date Tasks="@_tasks" />
 
-<DayPicker @bind-Date=_date />
+    <DayPicker @bind-Date=_date @bind-Date:after=ReloadTasksAsync />
 
-<span>Agenda ⏰</span>
+    @* <span>Agenda ⏰</span> *@
 
-<hr />
+    <hr />
 
-<span>Hoje 🗓️</span>
+    <span>Hoje 🗓️</span>
 
-<div class="d-flex flex-column gap-2">
-    @foreach (var task in _tasks)
-    {
-        <TaskCard Task=task />
-    }
+    <div class="d-flex flex-column gap-2">
+        @foreach (var task in _tasks)
+        {
+            <TaskCard Task=task />
+        }
+    </div>
+
+    <div style="position:fixed; bottom:25px; right: 25px;">
+        <FluentButton OnClick=@(RedirectToCreateTask) Class="rounded-circle" Color=@Color.Success.ToAttributeValue()>
+            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Add())" />
+        </FluentButton>
+    </div>
 </div>
 
-<div style="position:fixed; bottom:25px; right: 25px;">
-    <FluentButton OnClick=@(RedirectToCreateTask) Class="rounded-circle" Color=@Color.Success.ToAttributeValue()>
-        <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Add())" />
-    </FluentButton>
-</div>
 
 @code {
     [Parameter, EditorRequired]
@@ -43,6 +46,11 @@
         if (User is null)
             return;
 
+        await ReloadTasksAsync();
+    }
+
+    private async Task ReloadTasksAsync()
+    {
         _tasks = await _apiClient.Tasks.GetAsync(_date);
     }
 

@@ -40,7 +40,8 @@ namespace Jarvis.Extensions
 
             if (body != null)
             {
-                stringContent = new StringContent(JsonSerializer.Serialize(body, options), System.Text.Encoding.UTF8, "application/json");
+                var json = JsonSerializer.Serialize(body, options);
+                stringContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
             }
 
             var response = verb switch

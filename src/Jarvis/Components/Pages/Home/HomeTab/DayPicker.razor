@@ -24,7 +24,7 @@
     [Parameter, EditorRequired]
     public DateTime Date { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter]
     public EventCallback<DateTime> DateChanged { get; set; }
 
     private int _days = 10;
@@ -37,7 +37,7 @@
 
     private string GetDayOfWeek(DateTime date)
     {
-        return Date.DayOfWeek switch
+        return date.DayOfWeek switch
         {
             DayOfWeek.Monday => "Seg",
             DayOfWeek.Tuesday => "Ter",

@@ -1,4 +1,5 @@
-﻿using Jarvis.Models.Shared;
+﻿using Jarvis.Converters;
+using Jarvis.Models.Shared;
 using Jarvis.Models.Tags;
 using System.Text.Json.Serialization;
 
@@ -13,9 +14,11 @@ namespace Jarvis.Models.Tasks
         public List<TagModel> Tags { get; set; } = [];
 
         [JsonPropertyName("filterStartDate")]
+        [JsonConverter(typeof(DateTimeJsonConverter))]
         public DateTime? Start { get; set; }
 
         [JsonPropertyName("filterEndDate")]
+        [JsonConverter(typeof(DateTimeJsonConverter))]
         public DateTime? End { get; set; }
 
         public bool? Completed { get; set; }

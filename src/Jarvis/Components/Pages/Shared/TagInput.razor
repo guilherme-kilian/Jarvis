@@ -5,7 +5,7 @@
 
 <FluentLabel>Tags</FluentLabel>
 
-<div class="d-flex gap-2">
+<div class="d-flex gap-2 flex-wrap">
     @foreach (var tag in _mappedTags)
     {
         var background = $"background-color:{tag.Key.Color};";

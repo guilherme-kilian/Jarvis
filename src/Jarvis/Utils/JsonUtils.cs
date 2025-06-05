@@ -18,7 +18,7 @@ namespace Jarvis.Utils
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,                    
                 };
 
-                _options.Converters.Add(new DateTimeJsonConverter());
+                _options.Converters.Add(new EnumStringConverter());
             }
 
             return _options;

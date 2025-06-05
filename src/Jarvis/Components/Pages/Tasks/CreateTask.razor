@@ -21,14 +21,14 @@
 <FluentEditForm Model="_create" OnValidSubmit=SubmitAsync>
     <div class="d-flex flex-column gap-3">
         <FluentTextField @bind-Value=_create.Title Label="Título" />
-        <FluentCheckbox @bind-Value=_create.IsEvent Label="Isso é um evento" />
+        <FluentCheckbox @bind-Value=_create.Event Label="Isso é um evento" />
 
         <div class="d-flex">
             <div class="d-flex flex-column">
                 <FluentDatePicker @bind-Value=_create.Date Label="Data" />
             </div>
 
-            @if (_create.IsEvent)
+            @if (_create.Event)
             {            
                 <div class="d-flex flex-column">
                     <FluentTimePicker @bind-Value=_create.Date Label="Hora" />
@@ -36,7 +36,7 @@
             }
         </div>
 
-        @if (_create.IsEvent)
+        @if (_create.Event)
         {        
             <FluentCheckbox @bind-Value=_create.Recurring Label="Recorrente" />
 

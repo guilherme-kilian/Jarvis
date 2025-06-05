@@ -14,7 +14,7 @@ namespace Jarvis.Models.Tasks
         
         public List<long> Tags { get; set; } = [];
         
-        public bool IsEvent { get; set; }
+        public bool Event { get; set; }
         
         public bool Recurring { get; set; }
         
