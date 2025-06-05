@@ -19,12 +19,22 @@
                 <Tag TagModel=tag />
             }
         </div>
+
+        @if(ChildContent != null)
+        {
+            <div>
+                @ChildContent
+            </div>
+        }
     </div>
 </div>
 
 @code {
     [Parameter, EditorRequired]
     public TaskModel Task { get; set; } = null!;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     private bool _isDone;
 

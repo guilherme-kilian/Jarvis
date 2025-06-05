@@ -53,13 +53,21 @@
         <div class="d-flex flex-column gap-2">
             @foreach (var task in _tasks)
             {
-                <TaskCard Task=task />
+                <TaskCard Task=task>
+                    @if (TaskSelected.HasDelegate)
+                    {
+                        <button @onclick="@(() => TaskSelected.InvokeAsync(task))" class="btn text-success">Selecionar</button>
+                    }
+                </TaskCard>
             }
         </div>
     }
 }
 
 @code {
+
+    [Parameter]
+    public EventCallback<TaskModel> TaskSelected { get; set; }
 
     private TaskFilterModel _filter = new();
 

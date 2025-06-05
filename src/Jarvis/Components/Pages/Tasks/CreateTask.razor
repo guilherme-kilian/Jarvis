@@ -38,13 +38,13 @@
 
         @if (_create.IsEvent)
         {        
-            <FluentCheckbox @bind-Value=_create.IsRecurrent Label="Recorrente" />
+            <FluentCheckbox @bind-Value=_create.Recurring Label="Recorrente" />
 
-            @if (_create.IsRecurrent)
+            @if (_create.Recurring)
             {
                 <FluentSelect TOption="Recurrency"
                               OptionText="@(opt => opt.ToString())"
-                              @bind-SelectedOption=@_create.Recurrent
+                              @bind-SelectedOption=@_create.Recurrence
                               Items=@(Enum.GetValues<Recurrency>().ToList())>
                 </FluentSelect>
             }

@@ -16,9 +16,9 @@ namespace Jarvis.Models.Tasks
         
         public bool IsEvent { get; set; }
         
-        public bool IsRecurrent { get; set; }
+        public bool Recurring { get; set; }
         
-        public Recurrency Recurrent { get; set; }
+        public Recurrency Recurrence { get; set; }
 
         [Required]
         public DateTime? Date { get; set; }

@@ -1,0 +1,22 @@
+﻿@page "/meta/task"
+@using Jarvis.Clients
+@using Jarvis.Components.Pages.Home.SearchTab
+@using Jarvis.Models.Tasks
+
+@inject IJarvisApiClient _apiClient
+@inject IToastService _toastService
+@inject NavigationManager _navManager
+
+<SearchContent TaskSelected=SelectedTaskAsync />
+
+@code {
+
+    private async Task SelectedTaskAsync(TaskModel task)
+    {
+        await _apiClient.WinTheDay.IncrementAsync(task.Id);
+
+        _toastService.ShowSuccess("Tarefa adicionada com sucesso!");
+
+        _navManager.NavigateTo("/meta");
+    }
+}

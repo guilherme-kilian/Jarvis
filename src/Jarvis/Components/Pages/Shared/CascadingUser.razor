@@ -19,7 +19,7 @@
     [CascadingParameter]
     private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
-    public UserModel? User { get; private set; }
+    public UserModel User { get; private set; } = default!;
 
     public async Task SetUserAsync(FullUserModel user)
     {

@@ -1,0 +1,56 @@
+﻿@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.Tasks
+@using Jarvis.Models.WinTheDays
+@using Jarvis.Utils
+
+@page "/meta"
+
+@inject NavigationManager _navManager
+@inject IJarvisApiClient _apiClient
+@inject IToastService _toastService
+
+<FluentProgress Min="0" Max="_model.TotalGoal" Value="_model.Completed"></FluentProgress>
+
+Sua meta está @(_percentage)% concluída
+
+@foreach (var task in _model.Tasks)
+{
+    <TaskCard Task=task>
+        <button @onclick="@(() => RemoveAsync(task))" class="btn text-success">Remover</button>
+    </TaskCard>
+}
+
+<div class="d-flex flex-column gap-2">
+    @for (int i = 0; i < _model.RemainingTasksToSelect; i++)
+    {
+        <FluentButton OnClick=RedirectToNewTask IconStart=@(new Icons.Regular.Size20.Add())>Adicionar tarefa</FluentButton>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    private CascadingUser User { get; set; } = default!;
+
+    private WinTheDayModel _model = new();
+
+    private double _percentage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _model = await _apiClient.WinTheDay.GetAsync();
+        _percentage = MathUtils.GetPercentage(_model.Completed, _model.TotalGoal);
+    }
+
+    private void RedirectToNewTask()
+    {
+        _navManager.NavigateTo("/tasks/create");
+    }
+
+    private async Task RemoveAsync(TaskModel task)
+    {
+        _model.Tasks.Remove(task);
+        await _apiClient.WinTheDay.DecrementAsync(task.Id);
+        _toastService.ShowSuccess("Tarefa removida com sucesso!");
+    }
+}
