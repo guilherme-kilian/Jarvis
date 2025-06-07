@@ -21,7 +21,7 @@
     <div class="d-flex flex-column gap-2">
         @foreach (var task in _tasks)
         {
-            <div @onclick=@(() => RedirectToEditTask(task))>
+            <div style="cursor:pointer;" @onclick=@(() => RedirectToEditTask(task))>
                 <TaskCard Task=task />
             </div>
         }

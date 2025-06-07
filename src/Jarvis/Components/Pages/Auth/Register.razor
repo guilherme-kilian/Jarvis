@@ -12,10 +12,11 @@
 
 <FluentEditForm Model=_model OnValidSubmit=HandleSubmitAsync>
     <div class="d-flex flex-column">
-        <FluentTextField Label="Nome Completo" @bind-Value=_model.Name></FluentTextField>
-        <FluentTextField Label="E-mail" @bind-Value=_model.Email></FluentTextField>
-        <FluentTextField Label="Senha" @bind-Value=_model.Password></FluentTextField>
-        <FluentButton Type="ButtonType.Submit">Cadastrar</FluentButton>
+        <FluentTextField Required Label="Nome Completo" @bind-Value=_model.Name></FluentTextField>
+        <FluentTextField Required Label="E-mail" @bind-Value=_model.Email></FluentTextField>
+        <FluentTextField Required TextFieldType="TextFieldType.Password" Label="Senha" @bind-Value=_model.Password></FluentTextField>
+        
+        <SubmitButton Text="Cadastrar"></SubmitButton>
     </div>
 </FluentEditForm>
 

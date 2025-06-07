@@ -23,24 +23,24 @@
 
 <FluentEditForm Model="_create" OnValidSubmit=SubmitAsync>
     <div class="d-flex flex-column gap-3">
-        <FluentTextField @bind-Value=_create.Title Label="Título" />
+        <FluentTextField Required @bind-Value=_create.Title Label="Título" />
         <FluentCheckbox @bind-Value=_create.Event Label="Isso é um evento" />
 
         <div class="d-flex">
             <div class="d-flex flex-column">
-                <FluentDatePicker @bind-Value=_create.Date Label="Data" />
+                <FluentDatePicker Required @bind-Value=_create.Date Label="Data" />
             </div>
 
             @if (_create.Event)
-            {            
+            {
                 <div class="d-flex flex-column">
-                    <FluentTimePicker @bind-Value=_create.Date Label="Hora" />
+                    <FluentTimePicker @bind-Value=_create.Time Label="Hora" />
                 </div>
             }
         </div>
 
         @if (_create.Event)
-        {        
+        {
             <FluentCheckbox @bind-Value=_create.Recurring Label="Recorrente" />
 
             @if (_create.Recurring)
@@ -54,25 +54,29 @@
         }
 
         <PrioritySelectInput @bind-Value=@_create.Priority />
-        
+
         <TagInput Added=TagAdded Removed=TagRemoved />
     </div>
-       
     <SubmitButton />
 </FluentEditForm>
 
 @code {
-    private CreateTaskModel _create = new();
+    private CreateTaskFormModel _create = new();
 
     private async Task SubmitAsync()
     {
         try
-        {            
-            await _apiClient.Tasks.CreateAsync(_create);
+        {
+            var apiModel = _create.ToApiModel();
+
+            if (apiModel is null)
+                return;
+
+            await _apiClient.Tasks.CreateAsync(apiModel);
             _toastService.ShowSuccess("Sua tarefa foi criada com sucesso!");
             _navManager.NavigateTo("/");
         }
-        catch(HttpException ex)
+        catch (HttpException ex)
         {
             _logger.LogError(ex, "Erro ao criar tarefa");
             _toastService.ShowError(ex.Message);

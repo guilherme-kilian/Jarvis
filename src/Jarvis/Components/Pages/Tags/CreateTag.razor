@@ -13,9 +13,8 @@
 <ConfigurationHeader Title="Adicionar Tag" />
 
 <FluentEditForm Model=_create OnValidSubmit=SubmitAsync>
-    <FluentTextField @bind-Value=@_create.Title Label="Titulo" />
-    <FluentTextField @bind-Value=@_create.Color Label="Cor" />
-
+    <FluentTextField Required @bind-Value=@_create.Title Label="Titulo" />
+    <FluentTextField Required @bind-Value=@_create.Color Label="Cor" />    
     <SubmitButton />
 </FluentEditForm>
 

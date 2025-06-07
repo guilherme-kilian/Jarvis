@@ -15,9 +15,10 @@
 
 <FluentEditForm Model=_model OnValidSubmit=HandleSubmitAsync>
     <div class="d-flex flex-column">
-        <FluentTextField Label="E-mail" @bind-Value=_model.Email></FluentTextField>
-        <FluentTextField Label="Senha" @bind-Value=_model.Password></FluentTextField>
-        <FluentButton Type="ButtonType.Submit">Entrar</FluentButton>
+        <FluentTextField Required Label="E-mail" @bind-Value=_model.Email></FluentTextField>
+        <FluentTextField Required TextFieldType="TextFieldType.Password" Label="Senha" @bind-Value=_model.Password></FluentTextField>
+
+        <SubmitButton></SubmitButton>
     </div>
 </FluentEditForm>
 

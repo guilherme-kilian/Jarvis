@@ -6,6 +6,7 @@
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 @inject IJarvisApiClient _apiClient
+@inject NavigationManager _navManager
 
 <FluentEditForm Model=@_filter OnValidSubmit=@SearchAsync>
     <FluentSearch @bind-Value=@_filter.Title @bind-Value:after=@SearchAsync>
@@ -13,7 +14,7 @@
     </FluentSearch>
 
     @if (_showAdvancedSearch)
-    {        
+    {
         <AdvancedSearchForm Filter="_filter" />
     }
     else
@@ -42,7 +43,7 @@
 
 @if (_tasks is not null)
 {
-    if(_tasks.Count == 0)
+    if (_tasks.Count == 0)
     {
         <p>Nenhuma tarefa encontrada.</p>
     }
@@ -53,12 +54,18 @@
         <div class="d-flex flex-column gap-2">
             @foreach (var task in _tasks)
             {
-                <TaskCard Task=task>
-                    @if (TaskSelected.HasDelegate)
-                    {
+                if (TaskSelected.HasDelegate)
+                {
+                    <TaskCard Task=task>
                         <button @onclick="@(() => TaskSelected.InvokeAsync(task))" class="btn text-success">Selecionar</button>
-                    }
-                </TaskCard>
+                    </TaskCard>
+                }
+                else
+                {
+                    <div style="cursor:pointer;" @onclick=@(() => RedirectToEditTask(task))>
+                        <TaskCard Task=task />
+                    </div>
+                }
             }
         </div>
     }
@@ -90,5 +97,10 @@
     private async Task SearchAsync()
     {
         _tasks = await _apiClient.Tasks.SearchAsync(_filter);
+    }
+
+    private void RedirectToEditTask(TaskModel task)
+    {
+        _navManager.NavigateTo($"/tasks/{task.Id}");
     }
 }
