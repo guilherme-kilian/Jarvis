@@ -2,7 +2,6 @@
 using Jarvis.Models.Reminders;
 using Jarvis.Models.Shared;
 using Jarvis.Models.Substasks;
-using Jarvis.Models.Tags;
 using System.Text.Json.Serialization;
 
 namespace Jarvis.Models.Tasks
@@ -30,7 +29,6 @@ namespace Jarvis.Models.Tasks
 
         public List<long> Tags { get; set; } = [];
 
-
-        public List<AddSubtaskModel> Subtasks = [];
+        public List<AddSubtaskModel> Subtasks { get; set; } = [];
     }
 }

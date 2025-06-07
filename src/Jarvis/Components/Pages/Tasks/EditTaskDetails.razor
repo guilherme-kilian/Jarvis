@@ -1,27 +1,33 @@
 ﻿@using Jarvis.Models.Substasks
 @using Jarvis.Models.Tasks
 
-<FluentTextArea Label="Descrição" @bind-Value=@Task.Description />
+<div class="d-flex flex-column gap-3">
+
+    <FluentTextArea Label="Descrição" @bind-Value=@Task.Description />
 
 
-<FluentLabel>Subtarefas</FluentLabel>
+    <FluentLabel>Subtarefas</FluentLabel>
 
-@foreach (var subTask in Task.Subtasks)
-{
-    <FluentCheckbox @bind-Value=@(subTask.Completed) Label=@(subTask.Title) />
-}
+    @foreach (var subTask in Task.Subtasks)
+    {
+        <FluentCheckbox @bind-Value=@(subTask.Completed) Label=@(subTask.Title) />
+    }
 
-@if (_addingSubTask)
-{
-    <input type="text" @bind=_newSubTask />
-    <FluentIcon OnClick=AddSubtask Value="new Icons.Regular.Size20.Checkmark()" />
-}
-else
-{
-    <div style="cursor:pointer;" @onclick=ToggleAddingSubTask>
-        <FluentIcon Value="new Icons.Regular.Size20.Add()" /> <span>Adicionar</span>
-    </div>    
-}
+    @if (_addingSubTask)
+    {
+        <div class="d-flex gap-3">
+            <input type="text" class="form-control w-75" @bind=_newSubTask />
+            <FluentIcon OnClick=AddSubtask Value="new Icons.Regular.Size20.Checkmark()" />
+        </div>
+    }
+    else
+    {
+        <div style="cursor:pointer;" @onclick=ToggleAddingSubTask>
+            <FluentIcon Value="new Icons.Regular.Size20.Add()" /> <span>Adicionar</span>
+        </div>
+    }
+
+</div>
 
 @code {
     [Parameter, EditorRequired]

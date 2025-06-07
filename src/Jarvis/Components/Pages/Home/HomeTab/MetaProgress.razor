@@ -15,7 +15,7 @@
             <div class="d-flex flex-column">
                 <span>Ganhe o dia 🎯</span>
                 <small>
-                    @if (_hasMeta)
+                    @if (_hasMetaDefined)
                     {
                         <text>@(_model.Completed)/@(_model.TotalGoal) concluídas</text>
                     }
@@ -26,7 +26,7 @@
                 </small>
             </div>
             <div>
-                @if (_hasMeta)
+                @if (_hasMetaDefined)
                 {                    
                     <FluentProgressRing Max="100" Min="0" Value="@_percentage"
                                         Stroke=@ProgressStroke.Small
@@ -47,6 +47,8 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    private CascadingUser User { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public List<TaskModel> Tasks { get; set; } = [];
@@ -58,13 +60,13 @@
 
     private WinTheDayModel _model = new();
 
-    private bool _hasMeta;
+    private bool _hasMetaDefined;
 
     protected override async Task OnInitializedAsync()
     {
         _model = await _apiClient.WinTheDay.GetAsync();
         _percentage = (int)MathUtils.GetPercentage(_model.Completed, _model.TotalGoal);
-        _hasMeta = _model.Tasks.Count > 0 && Date.Date == DateTime.Now.Date;
+        _hasMetaDefined = _model.Tasks.Count == User.User.WinTheDayGoal;
     }
 
     private void RedirectToMeta()

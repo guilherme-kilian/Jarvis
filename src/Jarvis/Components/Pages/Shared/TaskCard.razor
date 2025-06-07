@@ -6,10 +6,10 @@
             <h5 class="ms-2">@Task.Title</h5>
         </div>
 
-        @if(Task.Substasks.Count > 0)
+        @if(Task.Subtasks.Count > 0)
         {            
             <div>
-                @(Task.Substasks.Count(s => s.IsDone))/@(Task.Substasks.Count) concluídas
+                @(Task.Subtasks.Count(s => s.Completed))/@(Task.Subtasks.Count) concluídas
             </div>
         }
 

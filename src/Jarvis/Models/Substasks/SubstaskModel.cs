@@ -6,7 +6,7 @@
 
         public required string Title { get; set; }
 
-        public bool IsDone { get; set; }
+        public bool Completed { get; set; }
     }
 
     public class AddSubtaskModel

@@ -24,7 +24,12 @@ namespace Jarvis.Clients
 
         public async Task DecrementAsync(long taskId)
         {
-            _ = await _client.DeleteJsonAsync<string>($"win-the-day/{taskId}");
+            var res = await _client.DeleteAsync($"win-the-day/{taskId}");
+
+            if (!res.IsSuccessStatusCode)
+            {
+                throw new HttpException(res.StatusCode, await res.Content.ReadAsStringAsync());
+            }
         }
 
         public Task<WinTheDayModel> GetAsync()
@@ -32,9 +37,14 @@ namespace Jarvis.Clients
             return _client.GetJsonAsync<WinTheDayModel>("win-the-day");
         }
 
-        public Task IncrementAsync(long taskId)
+        public async Task IncrementAsync(long taskId)
         {
-            return _client.PostJsonAsync<string>($"win-the-day/{taskId}", null);
+            var res = await _client.PostAsync($"win-the-day/{taskId}", null);
+
+            if (!res.IsSuccessStatusCode)
+            {
+                throw new HttpException(res.StatusCode, await res.Content.ReadAsStringAsync());
+            }
         }
     }
 }

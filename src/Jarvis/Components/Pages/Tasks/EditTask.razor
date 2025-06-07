@@ -1,6 +1,7 @@
 ﻿@using Jarvis.Clients
 @using Jarvis.Components.Pages.Shared
 @using Jarvis.Exceptions
+@using Jarvis.Models.Substasks
 @using Jarvis.Models.Tags
 @using Jarvis.Models.Tasks
 
@@ -77,6 +78,8 @@ else
                 Recurrence = task.Recurrence,
                 Priority = task.Priority,
                 Tags = task.Tags.Select(t => t.Id).ToList(),
+                Description = task.Description,
+                Subtasks = task.Subtasks.Select(s => new AddSubtaskModel() { Title = s.Title, Completed = s.Completed }).ToList(),
             };
         }
         catch (NotFoundException)

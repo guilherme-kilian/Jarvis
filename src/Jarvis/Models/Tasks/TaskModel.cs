@@ -28,6 +28,6 @@ namespace Jarvis.Models.Tasks
 
         public List<TagModel> Tags { get; set; } = [];
 
-        public List<SubstaskModel> Substasks { get; set; } = [];
+        public List<SubstaskModel> Subtasks { get; set; } = [];
     }
 }

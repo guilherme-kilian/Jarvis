@@ -11,6 +11,7 @@
 @inject IJarvisApiClient _apiClient
 @inject IToastService _toastService
 @inject ILogger<CreateTask> _logger
+@inject NavigationManager _navManager
 
 <style>
     .badge-add {
@@ -69,6 +70,7 @@
         {            
             await _apiClient.Tasks.CreateAsync(_create);
             _toastService.ShowSuccess("Sua tarefa foi criada com sucesso!");
+            _navManager.NavigateTo("/");
         }
         catch(HttpException ex)
         {
