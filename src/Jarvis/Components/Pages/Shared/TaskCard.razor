@@ -6,8 +6,8 @@
 <div class="card">
     <div class="card-body">
         <div class="d-flex">
-            <input type="checkbox" @bind:after=CheckboxClicked @onclick:stopPropagation @bind=@_isDone disabled="@(ChildContent != null)" />
-            <h5 class="ms-2 @(_isDone ? "text-decoration-line-through" : "")">@Task.Title</h5>
+            <input type="checkbox" @bind:after=CheckboxClicked @onclick:stopPropagation @bind=@_completed disabled="@(ChildContent != null)" />
+            <h5 class="ms-2 @(_completed ? "text-decoration-line-through" : "")">@Task.Title</h5>
         </div>
 
         @if(Task.SubtaskCount > 0)
@@ -40,15 +40,15 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    private bool _isDone;
+    private bool _completed;
 
     protected override void OnInitialized()
     {
-        _isDone = Task.IsDone;
+        _completed = Task.Completed;
     }
 
-    private Task CheckboxClicked()
+    private async Task CheckboxClicked()
     {
-        return _apiClient.Tasks.UpdateStatusAsync(Task.Id);
+        await _apiClient.Tasks.UpdateStatusAsync(Task.Id);
     }
 }

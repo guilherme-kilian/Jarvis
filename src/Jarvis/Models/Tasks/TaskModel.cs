@@ -22,7 +22,7 @@ namespace Jarvis.Models.Tasks
 
         public DateTime LastOpened { get; set; }
 
-        public bool IsDone { get; set; }
+        public bool Completed { get; set; }
 
         public Priority Priority { get; set; }
 
