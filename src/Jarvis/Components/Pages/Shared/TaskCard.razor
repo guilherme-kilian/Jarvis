@@ -1,15 +1,19 @@
-﻿@using Jarvis.Models.Tasks
+﻿@using Jarvis.Clients
+@using Jarvis.Models.Tasks
+
+@inject IJarvisApiClient _apiClient
+
 <div class="card">
     <div class="card-body">
         <div class="d-flex">
-            <input type="checkbox" @bind=@_isDone />
-            <h5 class="ms-2">@Task.Title</h5>
+            <input type="checkbox" @bind:after=CheckboxClicked @onclick:stopPropagation @bind=@_isDone disabled="@(ChildContent != null)" />
+            <h5 class="ms-2 @(_isDone ? "text-decoration-line-through" : "")">@Task.Title</h5>
         </div>
 
-        @if(Task.Subtasks.Count > 0)
+        @if(Task.SubtaskCount > 0)
         {            
             <div>
-                @(Task.Subtasks.Count(s => s.Completed))/@(Task.Subtasks.Count) concluídas
+                @(Task.CompletedCount)/@(Task.SubtaskCount) concluídas
             </div>
         }
 
@@ -41,5 +45,10 @@
     protected override void OnInitialized()
     {
         _isDone = Task.IsDone;
+    }
+
+    private Task CheckboxClicked()
+    {
+        return _apiClient.Tasks.UpdateStatusAsync(Task.Id);
     }
 }

@@ -12,18 +12,20 @@
 
 <ConfigurationHeader Title="Minha Meta 🚀"></ConfigurationHeader>
 
-<FluentProgress Min="0" Max="_model.TotalGoal" Value="_model.Completed"></FluentProgress>
+<div class="d-flex flex-column gap-3">
 
-Sua meta está @(_percentage)% concluída
+    <div>
+        <FluentProgress Min="0" Max="_model.TotalGoal" Value="_model.Completed"></FluentProgress>
+        <span>Sua meta está @(_percentage)% concluída</span>
+    </div>
 
-@foreach (var task in _model.Tasks)
-{
-    <TaskCard Task=task>
-        <button @onclick="@(() => RemoveAsync(task))" class="btn text-success">Remover</button>
-    </TaskCard>
-}
+    @foreach (var task in _model.Tasks)
+    {
+        <TaskCard Task=task>
+            <button @onclick="@(() => RemoveAsync(task))" class="btn text-success">Remover</button>
+        </TaskCard>
+    }
 
-<div class="d-flex flex-column gap-2">
     @for (int i = 0; i < _model.RemainingTasksToSelect; i++)
     {
         <FluentButton OnClick=RedirectToNewTask IconStart=@(new Icons.Regular.Size20.Add())>Adicionar tarefa</FluentButton>
