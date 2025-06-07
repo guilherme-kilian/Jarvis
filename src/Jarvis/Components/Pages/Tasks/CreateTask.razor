@@ -1,14 +1,16 @@
 ﻿@page "/tasks/create"
 @using Jarvis.Clients
 @using Jarvis.Components.Pages.Shared
+@using Jarvis.Exceptions
 @using Jarvis.Models.Shared
 @using Jarvis.Models.Tags
 @using Jarvis.Models.Tasks
+@using Microsoft.Extensions.Logging
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 @inject IJarvisApiClient _apiClient
 @inject IToastService _toastService
-
+@inject ILogger<CreateTask> _logger
 
 <style>
     .badge-add {
@@ -63,8 +65,16 @@
 
     private async Task SubmitAsync()
     {
-        await _apiClient.Tasks.CreateAsync(_create);
-        _toastService.ShowSuccess("Sua tarefa foi criada com sucesso!");
+        try
+        {            
+            await _apiClient.Tasks.CreateAsync(_create);
+            _toastService.ShowSuccess("Sua tarefa foi criada com sucesso!");
+        }
+        catch(HttpException ex)
+        {
+            _logger.LogError(ex, "Erro ao criar tarefa");
+            _toastService.ShowError(ex.Message);
+        }
     }
 
     private void TagAdded(TagModel tag)

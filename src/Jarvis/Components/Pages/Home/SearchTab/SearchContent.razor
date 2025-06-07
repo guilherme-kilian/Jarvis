@@ -30,7 +30,7 @@
                 <span class="badge">@($"{_filter.Start:dd/MM/yyyy}")</span>
             }
 
-            @foreach (var tag in _filter.Tags)
+            @foreach (var tag in _tags.Where(t => _filter.Tags.Contains(t.Id)))
             {
                 <Tag TagModel=tag />
             }
@@ -74,6 +74,13 @@
     private List<TaskModel>? _tasks;
 
     private bool _showAdvancedSearch = false;
+
+    private List<TagModel> _tags = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tags = await _apiClient.Tags.GetAsync();
+    }
 
     private void ToggleAdvancedSearch()
     {

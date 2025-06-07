@@ -21,7 +21,9 @@
     <div class="d-flex flex-column gap-2">
         @foreach (var task in _tasks)
         {
-            <TaskCard Task=task />
+            <div @onclick=@(() => RedirectToEditTask(task))>
+                <TaskCard Task=task />
+            </div>
         }
     </div>
 
@@ -57,5 +59,10 @@
     private void RedirectToCreateTask()
     {
         _navManager.NavigateTo("/tasks/create");
+    }
+
+    private void RedirectToEditTask(TaskModel task)
+    {
+        _navManager.NavigateTo($"/tasks/{task.Id}");
     }
 }

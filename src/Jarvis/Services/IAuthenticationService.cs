@@ -108,9 +108,10 @@ namespace Jarvis.Services
                     new Claim(ClaimTypes.Name, user.Name),
                     //new(ClaimTypes.Email, user.Email),
                     new(ClaimTypesCustom.Token, user.Token),
+                    new Claim(ClaimTypes.Role, "User"),
                     new Claim(ClaimTypesCustom.LastName, user.LastName),
                     new(ClaimTypesCustom.ProfilePicture, user.ProfilePictureUrl ?? string.Empty),
-                    new Claim(ClaimTypes.Role, "User"),
+                    new Claim(ClaimTypesCustom.DailyMeta, user.WinTheDayGoal?.ToString() ?? string.Empty),
                 ];
 
             var identitiy = new ClaimsIdentity("external");

@@ -17,11 +17,10 @@
 }
 else if (_notFound)
 {
-
 }
 else
-{    
-    <FluentEditForm>
+{
+    <FluentEditForm Model=_task OnValidSubmit=SubmitAsync>
         <FluentTabs>
             <FluentTab>
                 <Header>
@@ -48,6 +47,7 @@ else
                 </Content>
             </FluentTab>
         </FluentTabs>
+        <SubmitButton></SubmitButton>
     </FluentEditForm>
 }
 
@@ -76,7 +76,7 @@ else
                 Recurring = task.Recurring,
                 Recurrence = task.Recurrence,
                 Priority = task.Priority,
-                Tags = task.Tags
+                Tags = task.Tags.Select(t => t.Id).ToList(),
             };
         }
         catch (NotFoundException)
@@ -99,11 +99,11 @@ else
 
     private void TagAdded(TagModel tag)
     {
-        _task?.Tags.Add(tag);
+        _task?.Tags.Add(tag.Id);
     }
 
     private void TagRemoved(TagModel tag)
     {
-        _task?.Tags.Remove(tag);
+        _task?.Tags.Remove(tag.Id);
     }
 }

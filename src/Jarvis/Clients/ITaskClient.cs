@@ -26,9 +26,10 @@ namespace Jarvis.Clients
             _client = client;
         }
 
-        public Task<TaskModel> CreateAsync(CreateTaskModel create)
+        public async Task<TaskModel> CreateAsync(CreateTaskModel create)
         {
-            return _client.PostJsonAsync<TaskModel>("tasks", create);
+            var taskId = await _client.PostJsonAsync<long>("tasks", create);
+            return await GetAsync(taskId);
         }
                
         public Task<List<TaskModel>> GetAsync(DateTime date)

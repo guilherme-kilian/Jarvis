@@ -1,6 +1,7 @@
-﻿using Jarvis.Models.Shared;
-using Jarvis.Models.Tags;
+﻿using Jarvis.Converters;
+using Jarvis.Models.Shared;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Jarvis.Models.Tasks
 {
@@ -21,6 +22,7 @@ namespace Jarvis.Models.Tasks
         public Recurrency Recurrence { get; set; }
 
         [Required]
+        [JsonConverter(typeof(DateTimeIsoConverter))]
         public DateTime? Date { get; set; }
     }
 }

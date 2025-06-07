@@ -8,7 +8,7 @@
 
 @foreach (var subTask in Task.Subtasks)
 {
-    <FluentCheckbox @bind-Value=@(subTask.IsDone) Label=@(subTask.Title) />
+    <FluentCheckbox @bind-Value=@(subTask.Completed) Label=@(subTask.Title) />
 }
 
 @if (_addingSubTask)

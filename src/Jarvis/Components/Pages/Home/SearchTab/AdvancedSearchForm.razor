@@ -15,12 +15,12 @@
 
     private void TagAdded(TagModel tag)
     {
-        Filter.Tags.Add(tag);
+        Filter.Tags.Add(tag.Id);
     }
 
     private void TagRemoved(TagModel tag)
     {
-        Filter.Tags.Remove(tag);
+        Filter.Tags.Remove(tag.Id);
     }
 
     private void DateChanged()

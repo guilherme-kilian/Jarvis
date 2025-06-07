@@ -28,7 +28,7 @@
     private Dictionary<TagModel, bool> _mappedTags = [];
 
     [Parameter]
-    public List<TagModel> CurrentTags { get; set; } = [];
+    public List<long> CurrentTags { get; set; } = [];
 
     [Parameter, EditorRequired]
     public EventCallback<TagModel> Removed { get; set; }
@@ -44,7 +44,7 @@
 
         foreach (var tag in tags)
         {
-            if (CurrentTags.Contains(tag))
+            if (CurrentTags.Contains(tag.Id))
             {
                 _mappedTags[tag] = true;
             }

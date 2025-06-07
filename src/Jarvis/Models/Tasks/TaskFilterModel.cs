@@ -11,7 +11,7 @@ namespace Jarvis.Models.Tasks
 
         public string? Title { get; set; }
 
-        public List<TagModel> Tags { get; set; } = [];
+        public List<long> Tags { get; set; } = [];
 
         [JsonPropertyName("filterStartDate")]
         [JsonConverter(typeof(DateTimeJsonConverter))]
