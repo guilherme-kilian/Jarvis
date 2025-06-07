@@ -1,19 +1,29 @@
 ﻿
+<style>
+    .date-card {
+        cursor: pointer;
+        min-width: 60px;
+        min-height: 60px;
+        border-radius: 1.25rem !important
+    }
+
+    .selected-card {
+        border-color: var(--bs-primary-active);
+    }
+</style>
+
 
 <div class="d-flex gap-2 flex-nowrap" style="overflow-x:auto;">
     @for (int i = 0; i < _days; i++)
     {
         var date = DateTime.Now.AddDays(i);
 
-        <div class="card" style="cursor:pointer; min-width:75px;" @onclick=@(() => OnDateSelected(date))>
-            <div class="card-body">
-                <div class="d-flex flex-column justify-content-center align-items-center">
-                    <span>@date.Day</span>
-                    <span>
-                        @GetDayOfWeek(date)
-                    </span>                    
-                </div>
-            </div>
+        <div class="card d-flex flex-column justify-content-center align-items-center date-card @(date.Date == Date.Date ? "selected-card" : "")"
+             @onclick=@(() => OnDateSelected(date))>
+            <b>@date.Day</b>
+            <span>
+                @GetDayOfWeek(date)
+            </span>
         </div>
     }
 </div>

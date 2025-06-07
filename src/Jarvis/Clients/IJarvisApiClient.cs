@@ -12,6 +12,8 @@ namespace Jarvis.Clients
         IUserClient Users { get; }
 
         IWinTheDayClient WinTheDay { get; }
+
+        IVerificationClient Verifications { get; }
     }
 
     public class JarvisApiClient : IJarvisApiClient
@@ -30,5 +32,7 @@ namespace Jarvis.Clients
         public IUserClient Users => new UserClient(_client);
 
         public IWinTheDayClient WinTheDay => new WinTheDayClient(_client);
+
+        public IVerificationClient Verifications => new VerificationClient(_client);
     }
 }

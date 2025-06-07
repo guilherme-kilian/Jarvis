@@ -24,12 +24,7 @@ namespace Jarvis.Clients
 
         public async Task DecrementAsync(long taskId)
         {
-            var res = await _client.DeleteAsync($"win-the-day/{taskId}");
-
-            if (!res.IsSuccessStatusCode)
-            {
-                throw new HttpException(res.StatusCode, await res.Content.ReadAsStringAsync());
-            }
+            _ = await _client.DeleteTextAsync($"win-the-day/{taskId}");
         }
 
         public Task<WinTheDayModel> GetAsync()
@@ -39,12 +34,7 @@ namespace Jarvis.Clients
 
         public async Task IncrementAsync(long taskId)
         {
-            var res = await _client.PostAsync($"win-the-day/{taskId}", null);
-
-            if (!res.IsSuccessStatusCode)
-            {
-                throw new HttpException(res.StatusCode, await res.Content.ReadAsStringAsync());
-            }
+            _ = await _client.PostTextAsync($"win-the-day/{taskId}", null);
         }
     }
 }

@@ -1,0 +1,111 @@
+﻿@page "/verification/phone"
+@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.Verifications
+@using Microsoft.Extensions.Logging
+
+@inject IJarvisApiClient _apiClient
+@inject NavigationManager _navManager
+@inject IToastService _toastService
+@inject ILogger<VerifyPhoneNumber> _logger
+
+<ConfigurationHeader Title="Validar Número" />
+
+@{
+    var text = _validating ? $"Código enviado para {_phone}. Verifique sua caixa de mensagens" : "Insira o DDD e o número do seu WhatsApp para receber o código de validação";
+}
+
+<small>@text</small>
+
+@if (_validating && _confirm != null)
+{
+    <div class="d-flex justify-content-end">
+        <button @onclick="@(() => _validating = false)" class="btn text-success">Número errado</button>
+    </div>
+    <FluentEditForm Model=_confirm OnValidSubmit=ConfirmAsync>
+        <FluentTextField Required Maxlength="5" @bind-Value=_confirm.Code />
+
+        <div class="d-flex justify-content-center">
+            Não recebeu? <button @onclick="@(SendCodeAsync)" class="btn text-success">Reenviar</button>
+        </div>
+
+        <SubmitButton Text="Validar" />
+    </FluentEditForm>
+}
+else
+{
+
+    <FluentEditForm Model=_model OnValidSubmit=SendAsync>
+        <div class="d-flex">
+            <div class="d-flex flex-column">
+                <FluentTextField Required @bind-Value=_model.DDD Label="DDD" />
+            </div>
+            <div class="d-flex flex-column">
+                <FluentTextField Required @bind-Value=_model.PhoneNumber Label="Celular" />
+            </div>
+        </div>
+        <SubmitButton Text="Enviar" />
+    </FluentEditForm>
+}
+
+
+@code {
+    private VerifyPhoneFormModel _model = new();
+    private ConfirmPhoneFormModel? _confirm;
+
+    private bool _validating = false;
+
+    private string? _phone;
+
+    private async Task SendAsync()
+    {
+        var apiModel = _model.ToApiModel();
+
+        _phone = apiModel.PhoneNumber;
+
+        _confirm = new()
+        {
+            PhoneNumber = _phone,
+        };
+
+        await SendCodeAsync();
+    }
+
+    private async Task SendCodeAsync()
+    {
+        try
+        {            
+            await _apiClient.Verifications.VerifyPhoneAsync(_model.ToApiModel());
+
+            _toastService.ShowSuccess("Código de verificação enviado com sucesso!");
+
+            _validating = true;
+        }
+        catch (Exception ex)
+        {
+            _toastService.ShowError(ex.Message);
+            _logger.LogError(ex, "Erro ao enviar mensagem");
+        }
+    }
+
+    private async Task ConfirmAsync()
+    {
+        if (_confirm is null)
+            return;
+
+        var apiModel = _confirm.ToApiModel();
+
+        try
+        {
+            await _apiClient.Verifications.ConfirmPhoneAsync(apiModel);
+            _toastService.ShowSuccess("Confirmação realizada com sucesso!");
+            _navManager.NavigateTo("");
+        }
+        catch (Exception ex)
+        {
+            _toastService.ShowError(ex.Message);
+            _logger.LogError(ex, "Erro ao confirmar número");
+        }
+
+    }
+}

@@ -3,7 +3,7 @@
 
 @inject IJarvisApiClient _apiClient
 
-<div class="card">
+<div class="card rounded-3">
     <div class="card-body">
         <div class="d-flex">
             <input type="checkbox" @bind:after=CheckboxClicked @onclick:stopPropagation @bind=@_completed disabled="@(ChildContent != null)" />
