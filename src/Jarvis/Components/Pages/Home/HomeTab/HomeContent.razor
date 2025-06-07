@@ -2,37 +2,55 @@
 @using Jarvis.Components.Pages.Shared
 @using Jarvis.Models.Tasks
 @using Jarvis.Models.User
+@using Jarvis.Models.WinTheDays
 @using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 @inject IJarvisApiClient _apiClient
 @inject NavigationManager _navManager
 
-<div class="d-flex flex-column gap-3">
-    <MetaProgress Date=_date Tasks="@_tasks" />
+@if (_loading || _winTheDay is null)
+{
+    <FluentProgress></FluentProgress>
+}
+else
+{
+    var winTheDayTaskIds = _winTheDay.Tasks.Select(t => t.Id);
 
-    <DayPicker @bind-Date=_date @bind-Date:after=ReloadTasksAsync />
+    <div class="d-flex flex-column gap-3">
 
-    @* <span>Agenda ⏰</span> *@
+        <MetaProgress Model=_winTheDay Date=_date Tasks="@_tasks" />
 
-    <hr />
+        <DayPicker @bind-Date=_date @bind-Date:after=ReloadTasksAsync />
 
-    <span>Hoje 🗓️</span>
+        <span>Agenda ⏰</span>
 
-    <div class="d-flex flex-column gap-2">
-        @foreach (var task in _tasks)
+        @foreach (var task in _tasks.Where(t => !winTheDayTaskIds.Contains(t.Id)))
         {
             <div style="cursor:pointer;" @onclick=@(() => RedirectToEditTask(task))>
-                <TaskCard Task=task />
+                <TaskCardReadonly Task=task />
             </div>
         }
-    </div>
 
-    <div style="position:fixed; bottom:25px; right: 25px;">
-        <FluentButton OnClick=@(RedirectToCreateTask) Class="rounded-circle" Color=@Color.Success.ToAttributeValue()>
-            <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Add())" />
-        </FluentButton>
+        <hr />
+
+        <span>Hoje 🗓️</span>
+
+        <div class="d-flex flex-column gap-2">
+            @foreach (var task in _tasks.Where(t => winTheDayTaskIds.Contains(t.Id)))
+            {
+                <div style="cursor:pointer;" @onclick=@(() => RedirectToEditTask(task))>
+                    <TaskCard Task=task TaskUpdated=TaskUpdatedAsync />
+                </div>
+            }
+        </div>
+
+        <div style="position:fixed; bottom:25px; right: 25px;">
+            <FluentButton OnClick=@(RedirectToCreateTask) Class="rounded-circle" Color=@Color.Success.ToAttributeValue()>
+                <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Add())" />
+            </FluentButton>
+        </div>
     </div>
-</div>
+}
 
 
 @code {
@@ -41,14 +59,39 @@
 
     private List<TaskModel> _tasks = [];
 
+    private WinTheDayModel? _winTheDay;
+
     private DateTime _date = DateTime.Now;
+
+    private bool _loading = true;
 
     protected override async Task OnInitializedAsync()
     {
         if (User is null)
             return;
 
+        _winTheDay = await _apiClient.WinTheDay.GetAsync();
+
         await ReloadTasksAsync();
+
+        _loading = false;
+    }
+
+    private async Task TaskUpdatedAsync(long taskId)
+    {
+        var task = _tasks.FirstOrDefault(t => t.Id == taskId);
+
+        if (task is not null)
+        {
+            task.Completed = !task.Completed;
+        }
+
+        _winTheDay = await _apiClient.WinTheDay.GetAsync();
+
+        if(_winTheDay.Completed == _winTheDay.TotalGoal)
+        {
+            _navManager.NavigateTo("/day-won");
+        }
     }
 
     private async Task ReloadTasksAsync()

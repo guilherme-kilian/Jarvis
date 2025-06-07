@@ -40,6 +40,9 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    [Parameter, EditorRequired]
+    public EventCallback<long> TaskUpdated { get; set; }
+
     private bool _completed;
 
     protected override void OnInitialized()
@@ -50,5 +53,6 @@
     private async Task CheckboxClicked()
     {
         await _apiClient.Tasks.UpdateStatusAsync(Task.Id);
+        await TaskUpdated.InvokeAsync(Task.Id);
     }
 }

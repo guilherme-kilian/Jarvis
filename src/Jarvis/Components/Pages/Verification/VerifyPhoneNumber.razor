@@ -23,7 +23,7 @@
         <button @onclick="@(() => _validating = false)" class="btn text-success">Número errado</button>
     </div>
     <FluentEditForm Model=_confirm OnValidSubmit=ConfirmAsync>
-        <FluentTextField Required Maxlength="5" @bind-Value=_confirm.Code />
+        <FluentTextField Required Maxlength="6" @bind-Value=_confirm.Code />
 
         <div class="d-flex justify-content-center">
             Não recebeu? <button @onclick="@(SendCodeAsync)" class="btn text-success">Reenviar</button>

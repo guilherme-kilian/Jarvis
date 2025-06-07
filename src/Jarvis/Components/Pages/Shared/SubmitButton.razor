@@ -1,11 +1,24 @@
 ﻿@using Microsoft.FluentUI.AspNetCore.Components.Extensions
 
 
-<div class="mt-4">
-    <FluentButton Class="d-grid d-block" BackgroundColor="var(--success)" Color="white" Type="ButtonType.Submit">@Text</FluentButton>
-</div>
+@if (Submit.HasDelegate)
+{
+    <div class="mt-4">
+        <FluentButton Class="d-grid d-block" BackgroundColor="var(--success)" Color="white" Type="ButtonType.Button" OnClick=Submit>@Text</FluentButton>
+    </div>
+}
+else
+{
+    <div class="mt-4">
+        <FluentButton Class="d-grid d-block" BackgroundColor="var(--success)" Color="white" Type="ButtonType.Submit">@Text</FluentButton>
+    </div>
+}
+
 
 @code {
     [Parameter]
     public string Text { get; set; } = "Salvar";
+
+    [Parameter]
+    public EventCallback Submit { get; set; }
 }

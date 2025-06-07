@@ -12,22 +12,34 @@
 <div class="card mt-4 rounded-3">
     <div class="card-body">
         <div class="d-flex justify-content-between">
-            <div class="d-flex flex-column">
-                <span>Ganhe o dia 🎯</span>
-                <small>
-                    @if (_hasMetaDefined)
-                    {
-                        <text>@(_model.Completed)/@(_model.TotalGoal) concluídas</text>
-                    }
-                    else
-                    {
-                        <text>Sem meta definida</text>
-                    }
-                </small>
-            </div>
+            @if (Model.Tasks.Count > 0 && Model.Completed == Model.TotalGoal)
+            {
+                <div class="d-flex flex-column">
+                    <span>Meta concluída 🥳</span>
+                    <small>
+                        Continue assim
+                    </small>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-column">
+                    <span>Ganhe o dia 🎯</span>
+                    <small>
+                        @if (_hasMetaDefined)
+                        {
+                            <text>@(Model.Completed)/@(Model.TotalGoal) concluídas</text>
+                        }
+                        else
+                        {
+                            <text>Sem meta definida</text>
+                        }
+                    </small>
+                </div>
+            }
             <div>
                 @if (_hasMetaDefined)
-                {                    
+                {
                     <FluentProgressRing Max="100" Min="0" Value="@_percentage"
                                         Stroke=@ProgressStroke.Small
                                         Color="@(Color.Success.ToAttributeValue())">
@@ -51,6 +63,9 @@
     private CascadingUser User { get; set; } = default!;
 
     [Parameter, EditorRequired]
+    public WinTheDayModel Model { get; set; }
+
+    [Parameter, EditorRequired]
     public List<TaskModel> Tasks { get; set; } = [];
 
     [Parameter, EditorRequired]
@@ -58,15 +73,12 @@
 
     private int _percentage;
 
-    private WinTheDayModel _model = new();
-
     private bool _hasMetaDefined;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
-        _model = await _apiClient.WinTheDay.GetAsync();
-        _percentage = (int)MathUtils.GetPercentage(_model.Completed, _model.TotalGoal);
-        _hasMetaDefined = _model.Tasks.Count == User.User.WinTheDayGoal;
+        _percentage = (int)MathUtils.GetPercentage(Model.Completed, Model.TotalGoal);
+        _hasMetaDefined = Model.Tasks.Count == User.User.WinTheDayGoal;
     }
 
     private void RedirectToMeta()

@@ -1,0 +1,49 @@
+﻿@page "/day-won"
+
+@using Jarvis.Components.Pages.Shared
+@inject NavigationManager _navManager
+
+<style>
+    .colored-day {
+        background-color: darkorange;
+        color: white;
+    }
+
+    .won-card{
+        min-width: 40px;
+    }
+</style>
+
+<div class="d-flex flex-column justify-content-center align-items-center gap-3">
+    <img src="@CascadingUser.User.ProfilePictureUrl" width="100" height="100" class="rounded-circle" />
+
+    <div class="d-flex gap-2 flex-nowrap">
+        @for (int i = 0; i < _days; i++)
+        {   
+            var date = DateTime.Now.AddDays(i);
+
+            <div style="" class="card d-flex rounded-circle justify-content-center align-items-center won-card p-2 @(date.Date == DateTime.Now.Date ? "colored-day" : "")">
+                <b>@date.Day</b>
+            </div>
+        }
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center flex-column">
+        <span>Parabéns, @(CascadingUser.User.Name)! 🥳</span>
+        <small>Você conquistou o dia!</small>
+    </div>
+</div>
+
+<SubmitButton Text="Continuar" Submit=RedirectHome />
+
+@code {
+    [CascadingParameter]
+    private CascadingUser CascadingUser { get; set; } = default!;
+
+    private int _days = 10;
+
+    private void RedirectHome()
+    {
+        _navManager.NavigateTo("");
+    }
+}
