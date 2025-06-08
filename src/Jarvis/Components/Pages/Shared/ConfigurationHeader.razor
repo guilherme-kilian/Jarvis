@@ -1,9 +1,8 @@
 ﻿@inject NavigationManager _navManager
 
-<div class="d-flex gap-2 mb-4">
+<div class="d-flex gap-2 flex-column mb-4">
     <FluentIcon OnClick="@(() => _navManager.NavigateTo("/"))" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.ArrowLeft())" />
-
-    <span>@Title</span>
+    <h4>@Title</h4>
 </div>
 
 @code {

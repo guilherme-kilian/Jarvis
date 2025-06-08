@@ -43,7 +43,7 @@ else
         </div>
 
         <div style="position:fixed; bottom:25px; right: 25px;">
-            <FluentButton OnClick=@(RedirectToCreateTask) Class="rounded-circle" Color=@Color.Success.ToAttributeValue()>
+            <FluentButton Style="border: 1px solid rgba(0, 0, 0, 0.1);" OnClick=@(RedirectToCreateTask) Class="rounded-circle" Color="black">
                 <FluentIcon Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Add())" />
             </FluentButton>
         </div>
@@ -93,7 +93,7 @@ else
 
         _winTheDay = await _apiClient.WinTheDay.GetAsync(_date);
 
-        if(_winTheDay.Completed == _winTheDay.TotalGoal)
+        if (_winTheDay.Completed == _winTheDay.TotalGoal)
         {
             _navManager.NavigateTo($"/day-won?Date={_date.Date}");
         }
