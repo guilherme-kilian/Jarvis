@@ -17,24 +17,28 @@
 }
 else
 {
-    <div class="d-flex gap-2">
+    
         <FluentTabs @bind-ActiveTabId=@_tab>
             <FluentTab Id="general">
                 <Header>
                     Geral
                 </Header>
                 <Content>
-                    <div class="d-flex flex-column justify-content-center align-items-center">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-2">
                         <img class="rounded-circle mb-2" src="@(CascadingUser.User.ProfilePictureUrl)" height="75" width="75" />
                         <InputFile class="form-control w-50" OnChange=UploadNewProfilePhoto>Editar foto</InputFile>
                     </div>
 
                     <FluentEditForm Model=_update OnValidSubmit=EditAsync>
-                        <FluentTextField @bind-Value=_update.Name Label="Nome" />
-                        <FluentTextField @bind-Value=_update.LastName Label="Sobrenome" />
-                        <FluentLabel>Tags</FluentLabel>
-                        <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
-                        <FluentNumberField Label="Meta diária" @bind-Value=_update.WinTheDayGoal />
+                        <div class="d-flex flex-column gap-2">
+                            <FluentTextField @bind-Value=_update.Name Label="Nome" />
+                            <FluentTextField @bind-Value=_update.LastName Label="Sobrenome" />
+                            <FluentLabel>Tags</FluentLabel>
+                            <FluentButton OnClick=RedirectToTags>Gerenciar tags</FluentButton>
+                            <FluentNumberField Label="Meta diária" @bind-Value=_update.WinTheDayGoal />
+
+                            <SubmitButton />
+                        </div>
                     </FluentEditForm>
                 </Content>
             </FluentTab>
@@ -45,12 +49,11 @@ else
                 <Content>
                     <div class="d-flex flex-column">
                         <span>Integrações</span>
-                        <WhatsAppButton Clicked=WhatsAppClicked />
+                        <WhatsAppButton Text="@(_hasIntegration ? "Integrado com WhatsApp" : "Integrar com WhatsApp")" Clicked=WhatsAppClicked />
                     </div>
                 </Content>
             </FluentTab>
         </FluentTabs>
-    </div>
 }
 
 @code {
@@ -64,7 +67,9 @@ else
 
     private string _tab = "general";
 
-    protected override void OnInitialized()
+    private bool _hasIntegration;
+
+    protected override async Task OnInitializedAsync()
     {
         if (CascadingUser?.User is null)
             return;
@@ -77,6 +82,10 @@ else
             Name = user.Name,
             LastName = user.LastName,
         };
+
+        var res = await _apiClient.Verifications.GetAsync();
+
+        _hasIntegration = res != null;
     }
 
     private void RedirectToTags()

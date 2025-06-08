@@ -3,18 +3,20 @@ using Jarvis.Models.Verifications;
 
 namespace Jarvis.Clients
 {
-    public interface IVerificationClient
+    public interface IIntegrationClient
     {
+        Task<IntegrationModel?> GetAsync();
+
         Task VerifyPhoneAsync(VerifyPhoneModel model);
 
         Task ConfirmPhoneAsync(ConfirmPhoneModel model);
     }
 
-    public class VerificationClient : IVerificationClient
+    public class IntegrationClient : IIntegrationClient
     {
         private readonly HttpClient _client;
 
-        public VerificationClient(HttpClient client)
+        public IntegrationClient(HttpClient client)
         {
             _client = client;
         }
@@ -27,6 +29,11 @@ namespace Jarvis.Clients
         public async Task ConfirmPhoneAsync(ConfirmPhoneModel model)
         {
             _ = await _client.PostTextAsync("verification/confirm", model);
+        }
+
+        public Task<IntegrationModel?> GetAsync()
+        {
+            return _client.GetJsonAsync<IntegrationModel?>("verification");
         }
     }
 }

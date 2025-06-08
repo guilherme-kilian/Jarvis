@@ -19,10 +19,10 @@
 
     <div class="d-flex gap-2 flex-nowrap">
         @for (int i = 0; i < _days; i++)
-        {   
+        {
             var date = DateTime.Now.AddDays(i);
 
-            <div style="" class="card d-flex rounded-circle justify-content-center align-items-center won-card p-2 @(date.Date == DateTime.Now.Date ? "colored-day" : "")">
+            <div style="" class="card d-flex rounded-circle justify-content-center align-items-center won-card p-2 @(date.Date == _date.Date ? "colored-day" : "")">
                 <b>@date.Day</b>
             </div>
         }
@@ -40,7 +40,20 @@
     [CascadingParameter]
     private CascadingUser CascadingUser { get; set; } = default!;
 
+    [Parameter, SupplyParameterFromQuery]
+    public string? Date { get; set; }
+
     private int _days = 10;
+
+    private DateTime _date = DateTime.Now;
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.TryParse(Date, out var parsedDate))
+        {
+            _date = parsedDate;
+        }
+    }
 
     private void RedirectHome()
     {

@@ -32,6 +32,6 @@ namespace Jarvis.Models.Tasks
 
         public int SubtaskCount { get; set; }
 
-        public int CompletedCount;
+        public int CompletedCount { get; set; }
     }
 }

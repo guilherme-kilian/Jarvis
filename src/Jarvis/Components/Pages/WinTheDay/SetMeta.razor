@@ -36,25 +36,35 @@
     [CascadingParameter]
     private CascadingUser User { get; set; } = default!;
 
+    [Parameter, SupplyParameterFromQuery]
+    public string? Date { get; set; }
+
     private WinTheDayModel _model = new();
 
     private double _percentage;
 
+    private DateTime _date = DateTime.Now;
+
     protected override async Task OnInitializedAsync()
     {
-        _model = await _apiClient.WinTheDay.GetAsync();
+        if (DateTime.TryParse(Date, out var parsedDate))
+        {
+            _date = parsedDate;
+        }
+
+        _model = await _apiClient.WinTheDay.GetAsync(_date);
         _percentage = MathUtils.GetPercentage(_model.Completed, _model.TotalGoal);
     }
 
     private void RedirectToNewTask()
     {
-        _navManager.NavigateTo("/meta/task");
+        _navManager.NavigateTo($"/meta/task?date={_date.Date}");
     }
 
     private async Task RemoveAsync(TaskModel task)
     {
         _model.Tasks.Remove(task);
-        await _apiClient.WinTheDay.DecrementAsync(task.Id);
+        await _apiClient.WinTheDay.DecrementAsync(task.Id, _date);
         _toastService.ShowSuccess("Tarefa removida com sucesso!");
     }
 }

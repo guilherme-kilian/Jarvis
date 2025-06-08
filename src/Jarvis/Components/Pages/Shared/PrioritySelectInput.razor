@@ -1,6 +1,6 @@
 ﻿@using Jarvis.Models.Shared
 
-<FluentSelect Required Label="Prioridade" OptionText="@(opt => opt.ToString())"
+<FluentSelect Required=@Required Label="Prioridade" OptionText="@(opt => opt.ToString())"
               @bind-SelectedOption=@_text
               @bind-SelectedOption:after=@ValueChangedAsync
               Items=@(_options)>
@@ -14,6 +14,8 @@
     [Parameter, EditorRequired]
     public EventCallback<Priority?> ValueChanged { get; set; }
 
+    [Parameter, EditorRequired]
+    public bool Required { get; set; }
 
     private List<string> _options = [ _defaultText ];
 

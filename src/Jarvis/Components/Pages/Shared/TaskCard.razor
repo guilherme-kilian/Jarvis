@@ -40,7 +40,7 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter]
     public EventCallback<long> TaskUpdated { get; set; }
 
     private bool _completed;

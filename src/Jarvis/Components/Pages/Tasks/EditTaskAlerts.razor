@@ -1,10 +1,30 @@
-﻿@using Jarvis.Models.Tasks
+﻿@using Jarvis.Clients
+@using Jarvis.Components.Pages.Shared
+@using Jarvis.Models.Tasks
+
+@inject IJarvisApiClient _apiClient
 
 <FluentLabel>Lembretes</FluentLabel>
 
-<button>Whatsapp</button>
+@if (_hasIntegration)
+{
+    <WhatsAppButton Text="WhatsApp" />
+}
+else
+{
+    <text>Você não possui nenhuma integração configurada</text>
+}
 
 @code {
     [Parameter, EditorRequired]
     public UpdateTaskModel Task { get; set; }
+
+    private bool _hasIntegration = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var integration = await _apiClient.Verifications.GetAsync();
+
+        _hasIntegration = integration != null;
+    }
 }

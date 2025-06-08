@@ -11,12 +11,25 @@
 
 @code {
 
+    [Parameter, SupplyParameterFromQuery]
+    public string? Date { get; set; }
+
+    private DateTime _date = DateTime.Now;
+
+    protected override void OnInitialized()
+    {
+        if (DateTime.TryParse(Date, out var parsedDate))
+        {
+            _date = parsedDate;
+        }
+    }
+
     private async Task SelectedTaskAsync(TaskModel task)
     {
-        await _apiClient.WinTheDay.IncrementAsync(task.Id);
+        await _apiClient.WinTheDay.IncrementAsync(task.Id, _date);
 
         _toastService.ShowSuccess("Tarefa adicionada com sucesso!");
 
-        _navManager.NavigateTo("/meta");
+        _navManager.NavigateTo($"/meta?Date={_date.Date}");
     }
 }

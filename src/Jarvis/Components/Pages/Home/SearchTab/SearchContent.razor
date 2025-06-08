@@ -9,36 +9,38 @@
 @inject NavigationManager _navManager
 
 <FluentEditForm Model=@_filter OnValidSubmit=@SearchAsync>
-    <FluentSearch @bind-Value=@_filter.Title @bind-Value:after=@SearchAsync>
-        <FluentIcon OnClick=ToggleAdvancedSearch Value="@(new Icons.Regular.Size16.Options())" Color="@Color.Neutral" Slot="end" />
-    </FluentSearch>
+    <div class="d-flex flex-column gap-2">
+        <FluentSearch Label="Titulo" @bind-Value=@_filter.Title>
+            <FluentIcon OnClick=ToggleAdvancedSearch Value="@(new Icons.Regular.Size16.Options())" Color="@Color.Neutral" Slot="end" />
+        </FluentSearch>
 
-    @if (_showAdvancedSearch)
-    {
-        <AdvancedSearchForm Filter="_filter" />
-    }
-    else
-    {
-        <div class="d-flex gap-1">
+        @if (_showAdvancedSearch)
+        {
+            <AdvancedSearchForm Filter="_filter" />
+        }
+        else
+        {
+            <div class="d-flex gap-1">
 
-            @if (_filter.Priority.HasValue)
-            {
-                <span class="badge">@(_filter.Priority.ToString())</span>
-            }
+                @if (_filter.Priority.HasValue)
+                {
+                    <span class="badge">@(_filter.Priority.ToString())</span>
+                }
 
-            @if (_filter.Start.HasValue)
-            {
-                <span class="badge">@($"{_filter.Start:dd/MM/yyyy}")</span>
-            }
+                @if (_filter.Start.HasValue)
+                {
+                    <span class="badge">@($"{_filter.Start:dd/MM/yyyy}")</span>
+                }
 
-            @foreach (var tag in _tags.Where(t => _filter.Tags.Contains(t.Id)))
-            {
-                <Tag TagModel=tag />
-            }
-        </div>
-    }
+                @foreach (var tag in _tags.Where(t => _filter.Tags.Contains(t.Id)))
+                {
+                    <Tag TagModel=tag />
+                }
+            </div>
+        }
 
-    <SubmitButton />
+        <SubmitButton Text="Pesquisar" />
+    </div>
 </FluentEditForm>
 
 @if (_tasks is not null)

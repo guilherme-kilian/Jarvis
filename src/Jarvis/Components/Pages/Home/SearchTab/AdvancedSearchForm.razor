@@ -3,9 +3,9 @@
 @using Jarvis.Models.Tags
 @using Jarvis.Models.Tasks
 
-<FluentDatePicker @bind-Value=Filter.Start @bind-Value:after=DateChanged />
+<FluentDatePicker Label="Data" @bind-Value=Filter.Start @bind-Value:after=DateChanged />
 
-<PrioritySelectInput @bind-Value=Filter.Priority />
+<PrioritySelectInput Required=false @bind-Value=Filter.Priority />
 
 <TagInput Added=TagAdded Removed=TagRemoved />
 

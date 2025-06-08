@@ -1,10 +1,13 @@
 ﻿
 <button @onclick=@(Clicked) class="btn btn-success">
     <img src="images/whatsapp.png" width="25" height="25" />
-    Integrar com WhatsApp
+    @Text
 </button>
 
 @code {
-    [Parameter, EditorRequired]
+    [Parameter]
     public EventCallback Clicked { get; set; }
+
+    [Parameter]
+    public string Text { get; set; } = "Integrar com WhatsApp";
 }

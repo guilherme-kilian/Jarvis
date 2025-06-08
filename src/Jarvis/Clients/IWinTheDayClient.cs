@@ -1,16 +1,13 @@
-﻿using Jarvis.Exceptions;
-using Jarvis.Extensions;
+﻿using Jarvis.Extensions;
 using Jarvis.Models.WinTheDays;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace Jarvis.Clients
 {
     public interface IWinTheDayClient
     {
-        Task<WinTheDayModel> GetAsync();
-        Task IncrementAsync(long taskId);
-        Task DecrementAsync(long taskId);
+        Task<WinTheDayModel> GetAsync(DateTime date);
+        Task IncrementAsync(long taskId, DateTime date);
+        Task DecrementAsync(long taskId, DateTime date);
     }
 
     public class WinTheDayClient : IWinTheDayClient
@@ -22,19 +19,24 @@ namespace Jarvis.Clients
             _client = client;
         }
 
-        public async Task DecrementAsync(long taskId)
+        public async Task DecrementAsync(long taskId, DateTime date)
         {
-            _ = await _client.DeleteTextAsync($"win-the-day/{taskId}");
+            _ = await _client.DeleteTextAsync(ConcatDateQueryString($"win-the-day/{taskId}", date));
         }
 
-        public Task<WinTheDayModel> GetAsync()
+        public Task<WinTheDayModel> GetAsync(DateTime date)
         {
-            return _client.GetJsonAsync<WinTheDayModel>("win-the-day");
+            return _client.GetJsonAsync<WinTheDayModel>(ConcatDateQueryString("win-the-day", date));
         }
 
-        public async Task IncrementAsync(long taskId)
+        public async Task IncrementAsync(long taskId, DateTime date)
         {
-            _ = await _client.PostTextAsync($"win-the-day/{taskId}", null);
+            _ = await _client.PostTextAsync(ConcatDateQueryString($"win-the-day/{taskId}", date), null);
+        }
+
+        private string ConcatDateQueryString(string path, DateTime date)
+        {
+            return $"{path}?date={date:yyyy-MM-dd}";
         }
     }
 }
