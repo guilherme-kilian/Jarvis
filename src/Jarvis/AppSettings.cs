@@ -8,6 +8,6 @@ namespace Jarvis
 {
     public class AppSettings
     {
-        public required Uri ApiUrl { get; set; }
+        public Uri? ApiUrl { get; set; }
     }
 }

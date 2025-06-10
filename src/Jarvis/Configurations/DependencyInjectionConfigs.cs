@@ -9,10 +9,10 @@ namespace Jarvis.Configurations
 {
     public static class DependencyInjectionConfigs
     {
-        public static MauiAppBuilder AddDependencyInjectionConfigs(this MauiAppBuilder builder, out AppSettings appSettings)
+        public static MauiAppBuilder AddDependencyInjectionConfigs(this MauiAppBuilder builder, out AppSettings? appSettings)
         {
-            builder.Configuration.AddJsonFile("appsettings.json", optional: false);
-            appSettings = builder.Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>() ?? throw new ArgumentNullException(nameof(appSettings));
+            builder.Configuration.AddJsonFile("appsettings.json", optional: true);
+            appSettings = builder.Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
 
             builder.Services.AddSingleton<AuthenticatedUser>();
             builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
